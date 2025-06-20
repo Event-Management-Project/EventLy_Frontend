@@ -11,6 +11,14 @@ import CustomerEventDetailsPage from "./components/CustomerEventDetailsPage";
 import OrganiserEventList from "./components/OrganiserEventList";
 import OrganiserEventFilters from "./components/OrganiserEventFilters";
 import OrganiserEventDetailsPage from "./components/OrganiserEventDetailsPage";
+import BookingForm from "./components/BookingForm";
+import Login from "./components/Login";
+import AttendeeList from "./components/AttendeeList";
+import Register from "./components/Register";
+import AboutUs from "./components/AboutUs";
+import ContactUs from "./components/ContactUs";
+
+
 
 function App() {
   return (
@@ -27,6 +35,13 @@ function App() {
       <OrganiserEventList/>
       <OrganiserEventFilters/>
       <OrganiserEventDetailsPage/>
+      <BookingForm/>
+      <AttendeeList/>
+      <AboutUs/>
+      <Login/>
+      <Register/>
+      <ContactUs/>
+       
     </div>
   );
 }
