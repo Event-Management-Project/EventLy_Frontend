@@ -5,6 +5,13 @@ import TicketSuccessPage from "./components/TicketSuccessPage";
 import CustomerNotifications from "./components/CustomerNotifications";
 import CustomerNavbar from "./components/CustomerNavbar";
 import BookingHistory from "./components/BookingHistory";
+import CustomerEventList from "./components/CustomerEventList";
+import CustomerEventFilters from "./components/CustomerEventFilters";
+import CustomerEventDetailsPage from "./components/CustomerEventDetailsPage";
+import OrganiserEventList from "./components/OrganiserEventList";
+import OrganiserEventFilters from "./components/OrganiserEventFilters";
+import OrganiserEventDetailsPage from "./components/OrganiserEventDetailsPage";
+
 
 
 function App() {
@@ -16,6 +23,12 @@ function App() {
       <CustomerNotifications />
       <BookingHistory/>
       <TicketSuccessPage />
+      <CustomerEventList/>
+      <CustomerEventFilters/>
+      <CustomerEventDetailsPage/>
+      <OrganiserEventList/>
+      <OrganiserEventFilters/>
+      <OrganiserEventDetailsPage/>
        
     </div>
   );
