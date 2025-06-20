@@ -29,7 +29,7 @@ function App() {
       <CustomerNotifications />
       <BookingHistory/>
       <TicketSuccessPage />
-      <CustomerEventList/>
+      {/* <CustomerEventList/>
       <CustomerEventFilters/>
       <CustomerEventDetailsPage/>
       <OrganiserEventList/>
@@ -40,7 +40,7 @@ function App() {
       <AboutUs/>
       <Login/>
       <Register/>
-      <ContactUs/>
+      <ContactUs/> */}
        
     </div>
   );
