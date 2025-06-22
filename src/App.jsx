@@ -5,8 +5,6 @@ import TicketSuccessPage from "./components/TicketSuccessPage";
 import CustomerNotifications from "./components/CustomerNotifications";
 import CustomerNavbar from "./components/CustomerNavbar";
 import BookingHistory from "./components/BookingHistory";
-<<<<<<< HEAD
-=======
 import CustomerEventList from "./components/CustomerEventList";
 import CustomerEventFilters from "./components/CustomerEventFilters";
 import CustomerEventDetailsPage from "./components/CustomerEventDetailsPage";
@@ -21,7 +19,6 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 
 
->>>>>>> a10cbda6cd4a389e04f86bdf142073fc5ca75607
 
 function App() {
   return (
@@ -32,9 +29,8 @@ function App() {
       <CustomerNotifications />
       <BookingHistory/>
       <TicketSuccessPage />
-<<<<<<< HEAD
-=======
       <CustomerEventList/>
+      {/* <CustomerEventList/>
       <CustomerEventFilters/>
       <CustomerEventDetailsPage/>
       <OrganiserEventList/>
@@ -45,9 +41,9 @@ function App() {
       <AboutUs/>
       <Login/>
       <Register/>
-      <ContactUs/>
+      <ContactUs/> */}
        
->>>>>>> a10cbda6cd4a389e04f86bdf142073fc5ca75607
+
     </div>
   );
 }
