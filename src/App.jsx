@@ -19,9 +19,9 @@ import ContactUs from "./components/ContactUs";
 import CustomerEventCard from "./components/CustomerEventCard";
 import OrganiserEventCard from "./components/OrganiserEventCard";
 import OrganiserProfile from "./components/OrganiserProfile";
-import OrganiserNavbar from "./components/OrganiserNavbar"
+import OrganiserNavbar from "./components/OrganiserNavbar";
 import OrganiserNotifications from "./components/OrganiserNotifications";
-import OrganiserSidebar from './components/OrganiserSidebar';
+import OrganiserSidebar from "./components/OrganiserSidebar";
 import OrganiserDashboard from "./components/OrganiserDashboard";
 import AddEvent from "./components/AddEvent";
 import EditEvent from "./components/EditEvent";
@@ -30,38 +30,40 @@ import AddEventFacilities from "./components/AddEventFacilities";
 function App() {
   return (
     <div>
-
-        <OrganiserNavbar />
-        <OrganiserProfile />
-        <OrganiserSidebar />
-        <OrganiserNotifications /> 
-
-        <OrganiserDashboard />
-        <AddEvent /> 
-       <EditEvent /> 
-       <AddEventFacilities /> 
-
-      {/* <CustomerProfile />
+      {/* Rusikesh */}
+      <OrganiserNavbar />
+      <OrganiserProfile />
+      <OrganiserSidebar />
+      <OrganiserNotifications />
+      <OrganiserDashboard />
+      <AddEvent />
+      <EditEvent />
+      <AddEventFacilities />
+     
+      {/* Sourabh */}
+      <CustomerProfile />
       <CustomerSidebar />
-      <CustomerNavbar/>
+      <CustomerNavbar />
       <CustomerNotifications />
-      <BookingHistory/>
+      <BookingHistory />
       <TicketSuccessPage />
-      <CustomerEventList/>
-       <CustomerEventList/>
-      <CustomerEventFilters/>
-      <CustomerEventDetailsPage/>
-      <OrganiserEventList/>
-      <OrganiserEventFilters/>
-      <BookingForm/>
-      <AttendeeList/> 
-      <AboutUs/> 
-      <Login/> 
-      <Register/>
-      <ContactUs/>
-      <CustomerEventCard/>
-      <OrganiserEventCard/> */}
-       
+     
+      {/* SHubham */}
+      <CustomerEventList />
+      <CustomerEventFilters />
+      <CustomerEventDetailsPage />
+      <OrganiserEventList />
+      <OrganiserEventFilters />
+      <CustomerEventCard />
+      <OrganiserEventCard />
+      
+      {/* farhan */}
+      <BookingForm />
+      <AttendeeList />
+      <AboutUs />
+      <Login />
+      <Register />
+      <ContactUs />
     </div>
   );
 }

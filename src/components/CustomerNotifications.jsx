@@ -2,18 +2,17 @@ import React from 'react';
 
 function CustomerNotifications() {
   const notifications = [
-    { id: 1, title: "Event Reminder", content: "Your event starts tomorrow!", read: false, date: "2025-08-01" },
-    { id: 2, title: "Booking Confirmed", content: "Your ticket has been booked.", read: true, date: "2025-07-20" },
+    "Your ticket has been confirmed!",
+    "Event starts in 2 days!",
+    "New event added in your city!",
   ];
 
   return (
-    <div>
-      <h2>Notifications</h2>
-      <ul>
-        {notifications.map(n => (
-          <li key={n.id}>
-            <strong>{n.title}</strong> - {n.content} ({n.date})
-          </li>
+    <div className="bg-white p-6 rounded-lg shadow-md m-6">
+      <h2 className="text-xl font-semibold mb-4 text-green-600">Notifications</h2>
+      <ul className="space-y-2 text-gray-700">
+        {notifications.map((note, index) => (
+          <li key={index} className="border-b pb-2">{note}</li>
         ))}
       </ul>
     </div>
