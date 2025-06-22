@@ -10,14 +10,14 @@ import CustomerEventFilters from "./components/CustomerEventFilters";
 import CustomerEventDetailsPage from "./components/CustomerEventDetailsPage";
 import OrganiserEventList from "./components/OrganiserEventList";
 import OrganiserEventFilters from "./components/OrganiserEventFilters";
-import OrganiserEventDetailsPage from "./components/OrganiserEventDetailsPage";
 import BookingForm from "./components/BookingForm";
 import Login from "./components/Login";
 import AttendeeList from "./components/AttendeeList";
 import Register from "./components/Register";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
-
+import CustomerEventCard from "./components/CustomerEventCard";
+import OrganiserEventCard from "./components/OrganiserEventCard";
 
 
 function App() {
@@ -35,16 +35,15 @@ function App() {
       <CustomerEventDetailsPage/>
       <OrganiserEventList/>
       <OrganiserEventFilters/>
-      <OrganiserEventDetailsPage/>
       <BookingForm/>
       <AttendeeList/> 
       <AboutUs/> 
       <Login/> 
       <Register/>
-      <ContactUs/> 
-      <ContactUs/> 
+      <ContactUs/>
+      <CustomerEventCard/>
+      <OrganiserEventCard/>
        
-
     </div>
   );
 }
