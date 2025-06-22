@@ -23,7 +23,7 @@ import ContactUs from "./components/ContactUs";
 function App() {
   return (
     <div>
-      <CustomerProfile />
+      {/* <CustomerProfile />
       <CustomerSidebar />
       <CustomerNavbar/>
       <CustomerNotifications />
@@ -34,13 +34,13 @@ function App() {
       <CustomerEventDetailsPage/>
       <OrganiserEventList/>
       <OrganiserEventFilters/>
-      <OrganiserEventDetailsPage/>
+      <OrganiserEventDetailsPage/> */}
       <BookingForm/>
-      <AttendeeList/>
-      <AboutUs/>
-      <Login/>
+      <AttendeeList/> 
+      <AboutUs/> 
+      <Login/> 
       <Register/>
-      <ContactUs/>
+      <ContactUs/> 
        
     </div>
   );
