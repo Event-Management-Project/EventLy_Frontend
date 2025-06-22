@@ -30,18 +30,19 @@ function App() {
       <BookingHistory/>
       <TicketSuccessPage />
       <CustomerEventList/>
-      {/* <CustomerEventList/>
+       <CustomerEventList/>
       <CustomerEventFilters/>
       <CustomerEventDetailsPage/>
       <OrganiserEventList/>
       <OrganiserEventFilters/>
       <OrganiserEventDetailsPage/>
       <BookingForm/>
-      <AttendeeList/>
-      <AboutUs/>
-      <Login/>
+      <AttendeeList/> 
+      <AboutUs/> 
+      <Login/> 
       <Register/>
-      <ContactUs/> */}
+      <ContactUs/> 
+      <ContactUs/> 
        
 
     </div>
