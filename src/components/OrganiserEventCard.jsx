@@ -1,24 +1,55 @@
 import React from 'react';
 
 const OrganiserEventCard = () => {
-  const event = {
-    evt_title: 'Event Title',
-    location: 'City, Country',
-    start_dateTime: '2025-08-01',
-    category: 'Tech',
-    ticket_price: 200,
-  };
-
   return (
-    <div>
-      <img src="event.jpg" alt="Event" />
-      <h3>{event.evt_title}</h3>
-      <p>{event.location}</p>
-      <p>{event.start_dateTime}</p>
-      <span>{event.category}</span>
-      <span>{event.ticket_price}</span>
-      <button>Edit</button>
-      <button>Delete</button>
+    <div className="bg-white border border-gray-200 rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden">
+      <img
+        src="/placeholder-event.jpg"
+        alt="Event Banner"
+        className="w-full h-48 object-cover"
+      />
+
+      <div className="p-4 flex flex-col justify-between h-full">
+        <div>
+          <h3 className="text-2xl font-bold text-[#333333] mb-1 truncate">
+            AI & Robotics Expo
+          </h3>
+
+          <div className="flex items-center text-sm text-gray-600 mb-1">
+            <span className="mr-1 font-medium">📍</span>
+            Delhi, India
+          </div>
+
+          <div className="flex items-center text-sm text-gray-600 mb-2">
+            <span className="mr-1 font-medium">📅</span>
+            2025-09-15T10:00
+          </div>
+
+          <div className="flex justify-between items-center mb-2">
+            <span className="bg-[#F2B33D]/10 text-[#F2B33D] text-xs font-medium px-3 py-1 rounded-full">
+              Tech
+            </span>
+            <span className="text-[#333333] font-semibold text-sm">
+              ₹499
+            </span>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 mt-4">
+          <div
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-[#F2B33D] text-[#333333] rounded-lg opacity-60 cursor-not-allowed"
+            title="Edit disabled"
+          >
+            ✏️ Edit
+          </div>
+          <button
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-red-100 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition cursor-not-allowed"
+            disabled
+          >
+            🗑️ Delete
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
