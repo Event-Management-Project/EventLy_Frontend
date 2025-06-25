@@ -1,34 +1,53 @@
-import React from 'react'
+import React from 'react';
 
 function AddEvent() {
   return (
-    <div>
-      <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Add New Event</h1>
-      <form className="space-y-4">
+    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow">
+      <h1 className="text-2xl font-bold mb-6 text-blue-700">Add New Event</h1>
+      <form className="space-y-5">
         <div>
-          <label className="block text-sm font-medium">Event Name</label>
-          <input type="text" className="border p-2 w-full rounded" />
+          <label className="block text-sm font-medium text-gray-700">Event Name</label>
+          <input
+            type="text"
+            placeholder="Enter event name"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Date</label>
-          <input type="date" className="border p-2 w-full rounded" />
+          <label className="block text-sm font-medium text-gray-700">Date</label>
+          <input
+            type="date"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Description</label>
-          <textarea className="border p-2 w-full rounded" rows="4"></textarea>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            rows="4"
+            placeholder="Event details..."
+            className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Event Image</label>
-          <input type="file" className="border p-2 w-full rounded" />
+          <label className="block text-sm font-medium text-gray-700">Event Image</label>
+          <input
+            type="file"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all"
+        >
           Create Event
         </button>
       </form>
     </div>
-    </div>
-  )
+  );
 }
 
-export default AddEvent
+export default AddEvent;

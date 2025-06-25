@@ -1,35 +1,35 @@
 import React from "react";
-import CustomerProfile from "./components/CustomerProfile";
-import CustomerSidebar from "./components/CustomerSidebar";
-import TicketSuccessPage from "./components/TicketSuccessPage";
-import CustomerNotifications from "./components/CustomerNotifications";
-import CustomerNavbar from "./components/CustomerNavbar";
-import BookingHistory from "./components/BookingHistory";
-import CustomerEventList from "./components/CustomerEventList";
-import CustomerEventFilters from "./components/CustomerEventFilters";
-import CustomerEventDetailsPage from "./components/CustomerEventDetailsPage";
-import OrganiserEventList from "./components/OrganiserEventList";
-import OrganiserEventFilters from "./components/OrganiserEventFilters";
-import BookingForm from "./components/BookingForm";
-import Login from "./components/Login";
-import AttendeeList from "./components/AttendeeList";
-import Register from "./components/Register";
-import AboutUs from "./components/AboutUs";
-import ContactUs from "./components/ContactUs";
-import CustomerEventCard from "./components/CustomerEventCard";
-import OrganiserEventCard from "./components/OrganiserEventCard";
-import OrganiserProfile from "./components/OrganiserProfile";
-import OrganiserNavbar from "./components/OrganiserNavbar";
-import OrganiserNotifications from "./components/OrganiserNotifications";
-import OrganiserSidebar from "./components/OrganiserSidebar";
-import OrganiserDashboard from "./components/OrganiserDashboard";
-import AddEvent from "./components/AddEvent";
-import EditEvent from "./components/EditEvent";
-import AddEventFacilities from "./components/AddEventFacilities";
+import CustomerProfile from "./components/Customer/CustomerProfile"
+import CustomerSidebar from "./components/Customer/CustomerSidebar";
+import TicketSuccessPage from "./components/Events/TicketSuccessPage";
+import CustomerNotifications from "./components/Customer/CustomerNotifications";
+import CustomerNavbar from "./components/Customer/CustomerNavbar";
+import BookingHistory from "./components/Events/BookingHistory";
+import CustomerEventList from "./components/Customer/CustomerEventList";
+import CustomerEventFilters from "./components/Customer/CustomerEventFilters";
+import CustomerEventDetailsPage from "./components/Customer/CustomerEventDetailsPage";
+import OrganiserEventList from "./components/Organiser/OrganiserEventList";
+import OrganiserEventFilters from "./components/Organiser/OrganiserEventFilters";
+import BookingForm from "./components/Events/BookingForm";
+import Login from "./pages/Login";
+import AttendeeList from "./components/Events/AttendeeList";
+import Register from "./pages/Register";
+import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
+import CustomerEventCard from "./components/Customer/CustomerEventCard";
+import OrganiserEventCard from "./components/Organiser/OrganiserEventCard";
+import OrganiserProfile from "./components/Organiser/OrganiserProfile";
+import OrganiserNavbar from "./components/Organiser/OrganiserNavbar";
+import OrganiserNotifications from "./components/Organiser/OrganiserNotifications";
+import OrganiserSidebar from "./components/Organiser/OrganiserSidebar";
+import OrganiserDashboard from "./components/Organiser/OrganiserDashboard";
+import AddEvent from "./components/Events/AddEvent";
+import EditEvent from "./components/Events/EditEvent";
+import AddEventFacilities from "./components/Events/AddEventFacilities";
 
 function App() {
   return (
-    <div>
+<div>
       {/* Rusikesh */}
       <OrganiserNavbar />
       <OrganiserProfile />
@@ -67,5 +67,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

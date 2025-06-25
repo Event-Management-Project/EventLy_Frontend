@@ -1,18 +1,27 @@
 import React from 'react'
 
 function OrganiserNotifications() {
+ const notifications = [
+    "Event 'Hackathon 2025' starts tomorrow.",
+    "Your profile has been updated.",
+    "New event 'Tech Expo' is now live!",
+  ];
+
   return (
-    <div>
-       <div className="p-6 max-w-md mx-auto border border-gray-300 rounded">
-      <h2 className="text-xl font-semibold mb-4">Notifications</h2>
+    <div className="p-6 max-w-md mx-auto border border-gray-300 rounded shadow-md bg-white">
+      <h2 className="text-2xl font-bold mb-4 text-blue-600">Notifications</h2>
       <ul className="space-y-2">
-        <li>Event "Hackathon 2025" starts tomorrow.</li>
-        <li>Your profile has been updated.</li>
-        <li>New event "Tech Expo" is now live!</li>
+        {notifications.map((note, index) => (
+          <li
+            key={index}
+            className="p-3 bg-gray-100 rounded hover:bg-blue-100 transition-all"
+          >
+            🔔 {note}
+          </li>
+        ))}
       </ul>
     </div>
-    </div>
-  )
+  );
 }
 
 export default OrganiserNotifications

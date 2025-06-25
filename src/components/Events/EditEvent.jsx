@@ -2,26 +2,48 @@ import React from 'react';
 
 function EditEvent() {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Event</h1>
-      <form className="space-y-4">
+    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow">
+      <h1 className="text-2xl font-bold mb-6 text-blue-700">Edit Event</h1>
+      <form className="space-y-5">
         <div>
-          <label className="block text-sm font-medium">Event Name</label>
-          <input type="text" defaultValue="Tech Conference" className="border p-2 w-full rounded" />
+          <label className="block text-sm font-medium text-gray-700">Event Name</label>
+          <input
+            type="text"
+            defaultValue="Tech Conference"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Date</label>
-          <input type="date" defaultValue="2025-08-15" className="border p-2 w-full rounded" />
+          <label className="block text-sm font-medium text-gray-700">Date</label>
+          <input
+            type="date"
+            defaultValue="2025-08-15"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Description</label>
-          <textarea defaultValue="Annual tech summit." className="border p-2 w-full rounded" rows="4"></textarea>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            defaultValue="Annual tech summit."
+            rows="4"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Event Image</label>
-          <input type="file" className="border p-2 w-full rounded" />
+          <label className="block text-sm font-medium text-gray-700">Event Image</label>
+          <input
+            type="file"
+            className="mt-1 block w-full border border-gray-300 p-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all"
+        >
           Update Event
         </button>
       </form>
