@@ -1,4 +1,3 @@
-
 import React from "react";
 import CustomerProfile from "./components/Customer/CustomerProfile"
 import CustomerSidebar from "./components/Customer/CustomerSidebar";
@@ -30,7 +29,7 @@ import AddEventFacilities from "./components/Events/AddEventFacilities";
 
 function App() {
   return (
-    <div>
+<div>
       {/* Rusikesh */}
       <OrganiserNavbar />
       <OrganiserProfile />
@@ -68,5 +67,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
