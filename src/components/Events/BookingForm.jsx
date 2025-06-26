@@ -1,66 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 
 function BookingFormPage() {
-  const eventName = 'React Conference 2025';
+  const eventId = "react-conf-2025";
+  const [eventName, setEventName] = useState("Loading...");
   const pricePerTicket = 250;
 
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    attendees: 1,
-    specialRequests: '',
-  });
+  const [attendees, setAttendees] = useState(1);
+  const [specialRequests, setSpecialRequests] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setEventName("React Conference 2025");
+    }, 500);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Booking confirmed for ${formData.attendees} attendee(s). Total: ₹${formData.attendees * pricePerTicket}`);
+    const total = attendees * pricePerTicket;
+
+    alert(
+      `Booking Details:
+Event: ${eventName}
+Attendees: ${attendees}
+Special Requests: ${specialRequests || "None"}
+Total Amount: ₹${total}`
+    );
+
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 sm:px-8">
-      <h2 className="text-3xl font-bold text-center text-green-600 mb-8">Book Your Event</h2>
+    <div className="min-h-screen bg-[#f5f3fb] p-8 flex items-center justify-center">
+      <div className="max-w-lg w-full bg-white rounded-3xl shadow-xl p-10">
+        <h2 className="text-3xl font-extrabold text-[#4b3a9b] text-center mb-2">
+          Book Your Event
+        </h2>
+        <p className="text-center text-lg text-[#2e2e2e] mb-8 font-medium">
+          <span className="font-semibold text-[#4b3a9b]">Event:</span> {eventName}
+        </p>
 
-      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-4">
-        <div className="text-lg space-y-2">
-          <p><strong>Event:</strong> {eventName}</p>
-          <p><strong>Price per Ticket:</strong> ₹{pricePerTicket}</p>
-          <p><strong>Total:</strong> ₹{formData.attendees * pricePerTicket}</p>
-        </div>
-
-        <div className="text-center mt-4">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
-          >
-            {showForm ? "Cancel" : "Book Tickets"}
-          </button>
-        </div>
-
-        {showForm && (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4 border-t pt-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="attendees"
+              className="block text-sm font-semibold text-[#2e2e2e] mb-1"
+            >
+              Number of Attendees:
+            </label>
             <input
+              id="attendees"
               type="number"
               min="1"
-              value={formData.attendees}
-              onChange={(e) => setFormData({ ...formData, attendees: parseInt(e.target.value) })}
-              placeholder="Number of Attendees"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              value={attendees}
+              onChange={(e) => setAttendees(parseInt(e.target.value) || 1)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4b3a9b]"
               required
             />
-            <textarea
-              value={formData.specialRequests}
-              onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-              placeholder="Any special requests..."
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-              rows="3"
-            />
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+          </div>
+
+          <div>
+            <label
+              htmlFor="specialRequests"
+              className="block text-sm font-semibold text-[#2e2e2e] mb-1"
             >
-              Confirm Booking
-            </button>
-          </form>
-        )}
+              Special Requests:
+            </label>
+            <textarea
+              id="specialRequests"
+              value={specialRequests}
+              onChange={(e) => setSpecialRequests(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4b3a9b]"
+              rows="3"
+              placeholder="Any specific arrangements or notes..."
+            />
+          </div>
+
+          <p className="text-lg font-semibold text-[#2e2e2e]">
+            Total: ₹{" "}
+            <span className="text-[#4b3a9b] font-bold">
+              {attendees * pricePerTicket}
+            </span>
+          </p>
+
+          <button
+            type="submit"
+            className="w-full bg-[#4b3a9b] hover:bg-[#3a2f7e] text-white font-semibold py-3 rounded-lg text-lg transition"
+          >
+            Confirm Booking
+          </button>
+        </form>
       </div>
     </div>
   );
