@@ -1,7 +1,7 @@
 // Navbar.jsx
 import React from 'react';
 
-function Navbar() {
+function OrganiserNavbar() {
   return (
     <nav className="flex justify-between items-center px-6 py-4 border-b bg-white shadow-md">
       <h1 className="text-2xl font-bold text-blue-600">Evently</h1>
@@ -19,4 +19,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default OrganiserNavbar;
