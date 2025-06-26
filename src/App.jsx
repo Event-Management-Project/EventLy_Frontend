@@ -28,6 +28,7 @@ import AddEvent from "./components/Events/AddEvent";
 import EditEvent from "./components/Events/EditEvent";
 import AddEventFacilities from "./components/Events/AddEventFacilities";
 import NotificationModal from "./pages/NotificationModal";
+import CustomerLayout from "./components/Customer/CustomerLayout";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
       <AddEventFacilities />
      
       {/* Sourabh */}
+      <CustomerLayout/>
       <CustomerProfile />
       <CustomerSidebar />
       <CustomerNavbar />

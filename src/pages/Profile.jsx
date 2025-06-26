@@ -4,14 +4,14 @@ import { RiLockPasswordLine } from "react-icons/ri";
 
 function Profile({ role = "customer", defaultData }) {
   const isOrganiser = role === "organiser";
-
-const theme = {
-  background: isOrganiser ? "#FFE5E5" : "#F8FFE5",        // Light warm pink for organiser
-  primary: isOrganiser ? "#A31621" : "#06D6A0",           // Dark red for organiser
-  primaryHover: isOrganiser ? "#8F121C" : "#04b98c",
-  secondary: isOrganiser ? "#0D4D66" : "#118ab2",
-  secondaryHover: isOrganiser ? "#09394D" : "#0f799d",
-};
+ 
+  const theme = {
+    background: isOrganiser ? "#FCF7F8" : "#EFEAFF",
+    primary: isOrganiser ? "#A31621" : "#6A4FB6",
+    primaryHover: isOrganiser ? "#8F121C" : "#5a3fa1",
+    secondary: isOrganiser ? "#0D4D66" : "#0D4D66",
+    secondaryHover: isOrganiser ? "#09394D" : "#b63c7a",
+  };
 
   const [profile, setProfile] = useState(
     defaultData || {
@@ -22,7 +22,11 @@ const theme = {
     }
   );
 
-  const [password, setPassword] = useState({ current: "", new: "", confirm: "" });
+  const [password, setPassword] = useState({
+    current: "",
+    new: "",
+    confirm: "",
+  });
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [newProfile, setNewProfile] = useState(profile);
@@ -47,29 +51,42 @@ const theme = {
 
   return (
     <div
-       className="min-h-screen p-8"
-       style={{
-       backgroundColor: theme.background,
-       backgroundImage: isOrganiser
-      ? "radial-gradient(circle at top left, #fff8f8, #ffe5e5)"
-      : "none",
-  }}
->
-
-      <h2 className="text-4xl font-bold text-center mb-10" style={{ color: theme.primary }}>
+      className="min-h-screen p-8"
+      style={{
+        backgroundColor: theme.background,
+        backgroundImage: isOrganiser
+          ? "radial-gradient(circle at top left, #fff8f8, #ffe5e5)"
+          : "none",
+      }}
+    >
+      <h2
+        className="text-4xl font-bold text-center mb-10"
+        style={{ color: theme.primary }}
+      >
         Welcome, {profile.name}
       </h2>
 
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-lg p-8">
         <div className="flex justify-center mb-6">
-          <FaUserCircle className="w-24 h-24" style={{ color: theme.primary }} />
+          <FaUserCircle
+            className="w-24 h-24"
+            style={{ color: theme.primary }}
+          />
         </div>
 
         <div className="space-y-3 text-lg text-gray-800">
-          <div><strong>Name:</strong> {profile.name}</div>
-          <div><strong>Email:</strong> {profile.email}</div>
-          <div><strong>Phone:</strong> {profile.phone}</div>
-          <div><strong>Address:</strong> {profile.address}</div>
+          <div>
+            <strong>Name:</strong> {profile.name}
+          </div>
+          <div>
+            <strong>Email:</strong> {profile.email}
+          </div>
+          <div>
+            <strong>Phone:</strong> {profile.phone}
+          </div>
+          <div>
+            <strong>Address:</strong> {profile.address}
+          </div>
         </div>
 
         <div className="flex justify-center gap-6 mt-10 flex-wrap">
@@ -105,7 +122,9 @@ const theme = {
                 type="text"
                 name={field}
                 value={newProfile[field]}
-                onChange={(e) => setNewProfile({ ...newProfile, [field]: e.target.value })}
+                onChange={(e) =>
+                  setNewProfile({ ...newProfile, [field]: e.target.value })
+                }
                 placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 outline-none"
                 style={{ borderColor: theme.primary }}
@@ -129,7 +148,9 @@ const theme = {
                 type="password"
                 name={type}
                 value={password[type]}
-                onChange={(e) => setPassword({ ...password, [type]: e.target.value })}
+                onChange={(e) =>
+                  setPassword({ ...password, [type]: e.target.value })
+                }
                 placeholder={
                   type === "current"
                     ? "Current Password"

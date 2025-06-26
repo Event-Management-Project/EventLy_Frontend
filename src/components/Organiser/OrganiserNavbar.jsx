@@ -13,8 +13,6 @@ function OrganiserNavbar({ onMenuClick }) {
       'https://ui-avatars.com/api/?name=Organiser&background=F29F05&color=fff&rounded=true',
   };
 
-  const toggleMenu = () => setMenuOpen(prev => !prev);
-
   const goToMyEvents = () => {
     setMenuOpen(false);
   };
