@@ -26,6 +26,7 @@ import OrganiserDashboard from "./components/Organiser/OrganiserDashboard";
 import AddEvent from "./components/Events/AddEvent";
 import EditEvent from "./components/Events/EditEvent";
 import AddEventFacilities from "./components/Events/AddEventFacilities";
+import NotificationModal from "./pages/NotificationModal";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
       <AddEventFacilities />
      
       {/* Sourabh */}
+      <NotificationModal/>
       <CustomerProfile />
       <CustomerSidebar />
       <CustomerNavbar />
