@@ -1,37 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 
 function AddEventFacilities() {
-  return (
-    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow">
-      <h2 className="text-2xl font-bold text-blue-700 mb-6">Add Event Facility</h2>
-      <form className="space-y-6">
-        <div className="bg-gray-50 p-4 rounded space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Facility Name</label>
-            <input
-              type="text"
-              placeholder="Enter facility name"
-              className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+  const [allFacilities, setAllFacilities] = useState([]);
+  const [selectedFacilities, setSelectedFacilities] = useState([]);
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
-            <textarea
-              rows="3"
-              placeholder="Short description"
-              className="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          </div>
+  useEffect(() => {
+    const staticFacilities = [
+      { fst_id: 1, fst_name: "WiFi" },
+      { fst_id: 2, fst_name: "Parking" },
+      { fst_id: 3, fst_name: "Food Court" },
+      { fst_id: 4, fst_name: "Security" },
+    ];
+    setAllFacilities(staticFacilities);
+  }, []);
+
+  const toggleFacility = (fst_id) => {
+    setSelectedFacilities((prev) =>
+      prev.includes(fst_id)
+        ? prev.filter((id) => id !== fst_id)
+        : [...prev, fst_id]
+    );
+  };
+
+  const handleSubmit = () => {
+    alert(`Facilities saved: ${selectedFacilities.join(", ")}`);
+    console.log("Submitted Facilities:", selectedFacilities);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-rose-50 to-pink-200 flex items-center justify-center p-6">
+      <div className="max-w-xl w-full bg-white rounded-3xl shadow-2xl p-10 transition-all duration-300">
+        <h2 className="text-3xl font-extrabold text-center mb-8 text-rose-600 tracking-wide">
+           Add Facilities to Your Event
+        </h2>
+
+        <div className="space-y-5 mb-8">
+          {allFacilities.map((fac) => (
+            <label
+              key={fac.fst_id}
+              className={`flex items-center gap-3 p-4 rounded-lg border border-gray-200 transition-all duration-200 ${
+                selectedFacilities.includes(fac.fst_id)
+                  ? "bg-rose-50 border-rose-300 shadow"
+                  : "bg-gray-50 hover:bg-gray-100"
+              } cursor-pointer`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedFacilities.includes(fac.fst_id)}
+                onChange={() => toggleFacility(fac.fst_id)}
+                className="accent-rose-600 w-5 h-5"
+              />
+              <span className="text-gray-800 font-medium">{fac.fst_name}</span>
+            </label>
+          ))}
         </div>
 
         <button
-          type="submit"
-          className="bg-blue-700 hover:bg-blue-800 transition text-white px-5 py-2 rounded"
+          onClick={handleSubmit}
+          className="w-full bg-rose-600 text-white py-3 rounded-lg font-semibold hover:bg-rose-700 active:scale-95 transition-all shadow-md"
         >
-          Add Facility
+          Save Facilities
         </button>
-      </form>
+      </div>
     </div>
   );
 }

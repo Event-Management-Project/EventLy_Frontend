@@ -1,29 +1,43 @@
 import React from 'react';
-import { Home, Calendar, User, LogOut } from 'lucide-react';
+import {
+  FiHome, FiCalendar, FiBookOpen, FiUser, FiMessageCircle
+} from 'react-icons/fi';
 
 function OrganiserSidebar() {
-  const items = [
-    { label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
-    { label: 'Events', icon: <Calendar className="w-5 h-5" /> },
-    { label: 'Profile', icon: <User className="w-5 h-5" /> },
-    { label: 'Logout', icon: <LogOut className="w-5 h-5" /> },
+  const navItems = [
+    { label: "Home", icon: <FiHome /> },
+    { label: "Events", icon: <FiCalendar /> },
+    { label: "Bookings", icon: <FiBookOpen /> },
+    { label: "Reviews", icon: <FiMessageCircle /> },
+    { label: "Profile", icon: <FiUser /> },
   ];
 
+  const handleClick = (label) => {
+    alert(`${label} clicked! (routing disabled)`);
+  };
+
   return (
-    <div className="w-64 h-screen bg-gradient-to-b from-white to-blue-50 p-6 shadow-xl border-r border-blue-100">
-      <h2 className="text-3xl font-extrabold mb-8 text-blue-700 tracking-tight">Evently</h2>
-      <ul className="space-y-3">
-        {items.map((item, idx) => (
-          <li
-            key={idx}
-            className="flex items-center gap-3 text-gray-700 font-medium px-4 py-3 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition-all cursor-pointer"
+    <aside className="w-64 bg-[#FCF7F8] shadow-xl p-6 h-[calc(100vh-4rem)] hidden md:flex flex-col rounded-tr-3xl">
+      <nav className="flex flex-col gap-3 mt-4">
+        {navItems.map((item, index) => (
+          <button
+            key={index}
+            onClick={() => handleClick(item.label)}
+            className={`
+              flex items-center gap-3 px-4 py-3 rounded-xl 
+              font-medium text-gray-700 hover:bg-[#A31621]/10 hover:text-[#A31621] transition text-left
+            `}
           >
             {item.icon}
             <span>{item.label}</span>
-          </li>
+          </button>
         ))}
-      </ul>
-    </div>
+      </nav>
+
+      <div className="mt-auto text-sm text-center text-gray-400 pt-6 border-t">
+        © 2025 Evently
+      </div>
+    </aside>
   );
 }
 
