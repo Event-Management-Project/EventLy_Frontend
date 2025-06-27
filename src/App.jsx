@@ -32,17 +32,17 @@ function App() {
   return (
 <div>
       {/* Rusikesh */}
-      <OrganiserNavbar />
+      {/* <OrganiserNavbar />
       <OrganiserProfile />
       <OrganiserSidebar />
       <OrganiserNotifications />
       <OrganiserDashboard />
       <AddEvent />
       <EditEvent />
-      <AddEventFacilities />
+      <AddEventFacilities /> */}
      
       {/* Sourabh */}
-      <NotificationModal/>
+      {/* <NotificationModal/> */}
       <CustomerProfile />
       <CustomerSidebar />
       <CustomerNavbar />
