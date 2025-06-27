@@ -1,6 +1,7 @@
 import React from "react";
 import CustomerProfile from "./components/Customer/CustomerProfile"
 import CustomerSidebar from "./components/Customer/CustomerSidebar";
+import CustomerHome from "./components/Customer/CustomerHome";
 import TicketSuccessPage from "./components/Events/TicketSuccessPage";
 import CustomerNotifications from "./components/Customer/CustomerNotifications";
 import CustomerNavbar from "./components/Customer/CustomerNavbar";
@@ -42,7 +43,8 @@ function App() {
       <AddEventFacilities /> */}
      
       {/* Sourabh */}
-      {/* <NotificationModal/> */}
+      <CustomerHome/>
+      <NotificationModal/>
       <CustomerProfile />
       <CustomerSidebar />
       <CustomerNavbar />

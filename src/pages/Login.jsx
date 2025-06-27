@@ -15,7 +15,6 @@ function Login() {
     }
 
     console.log('Login submitted:', { email, password });
-    // Add login logic here
   };
 
   return (

@@ -42,7 +42,6 @@ function HeroSection() {
         <span className="animate-pulse border-r-2 border-[#6A4FB6] pr-1">{text}</span>
       </p>
 
-      {/* Search Bar */}
       <div className="w-full max-w-2xl mx-auto mt-8 px-2">
         <div className="flex items-center bg-white rounded-full shadow-md border border-[#E0D6F8] p-2">
           <input
