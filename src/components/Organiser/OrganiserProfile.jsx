@@ -1,6 +1,6 @@
-import Profile from "../../pages/Profile";
 
-function OrganiserProfile() {
+import Profile from '../../pages/Profile';
+ function OrganiserProfile() {
   return <Profile role="organiser" />;
 }
 
