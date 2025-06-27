@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MessageSquare, Star } from "lucide-react";
-import { HiCheckCircle, HiClock } from "react-icons/hi"; // <-- imported icons
+import { HiCheckCircle, HiClock } from "react-icons/hi";
 
 function BookingHistory() {
   const bookings = [

@@ -49,7 +49,6 @@ function UpcomingEvents() {
           </div>
         ))}
 
-        {/* View More card */}
         <div className="bg-white rounded-xl shadow-lg flex flex-col justify-center items-center hover:shadow-xl transition-shadow duration-300 cursor-pointer">
           <div className="p-6 text-center">
             <p className="text-[#6A4FB6] font-semibold text-lg mb-2">View More</p>

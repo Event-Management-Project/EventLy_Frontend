@@ -2,7 +2,6 @@ import React from 'react';
 import { FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 
 function CustomerEventCard({ event }) {
-  // Check if event prop is provided, use defaults if not
   const safeEvent = event || { title: 'No Title', category: 'Unknown', location: 'N/A', startDate: 'N/A', id: 'default-id' };
 
   return (
