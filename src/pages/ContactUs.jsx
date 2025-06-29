@@ -1,73 +1,79 @@
-import React, { useRef, useState } from "react";
-import { FaEnvelope, FaPhone, FaMapMarkedAlt } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
 
 function ContactUs() {
-  const nameRef = useRef();
-  const emailRef = useRef();
-  const messageRef = useRef();
-  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-      message: messageRef.current.value,
-    };
-    console.log("Contact details:", data);
-    setSubmitted(true);
-    e.target.reset();
+    const mailtoLink = `mailto:evently@gmail.com?subject=Contact%20from%20${formData.name}&body=${formData.message}%0A%0AFrom:%20${formData.email}`;
+    window.location.href = mailtoLink;
   };
 
   return (
-    <div className="min-h-screen bg-[#9FBFC5] py-12 px-6 sm:px-12 flex justify-center items-start">
-      <div className="max-w-6xl w-full grid md:grid-cols-2 gap-12">
-       
+    <div className="bg-[#FCF7F8] text-[#365B73] py-12 px-6 font-sans">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+        {/* Contact Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-2xl shadow-2xl border border-gray-300 space-y-6"
+          className="bg-white p-8 rounded-2xl shadow-md transition hover:shadow-lg"
         >
-          <h2 className="text-3xl font-extrabold text-[#0D4D66] mb-6 flex items-center gap-2">
-            <FaEnvelope className="w-7 h-7" /> Contact Us
-          </h2>
-
-          <InputField placeholder="Your Name" ref={nameRef} required />
-          <InputField placeholder="Your Email" type="email" ref={emailRef} required />
-          <TextareaField placeholder="Your Message" ref={messageRef} required />
-
+          <h2 className="text-3xl font-bold mb-6 tracking-wide">Get in Touch</h2>
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full mb-4 p-3 border border-[#98A2A6] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#365B73] text-[#365B73]"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full mb-4 p-3 border border-[#98A2A6] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#365B73] text-[#365B73]"
+          />
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+            className="w-full mb-4 p-3 border border-[#98A2A6] rounded-xl h-32 focus:outline-none focus:ring-2 focus:ring-[#365B73] text-[#365B73]"
+          ></textarea>
           <button
             type="submit"
-            className="w-full bg-[#0D4D66] hover:bg-teal-800 text-white font-semibold py-3 rounded-lg transition"
+            className="bg-[#365B73] text-white px-6 py-2 rounded-xl hover:bg-[#2b485c] transition font-semibold"
           >
             Send Message
           </button>
-
-          {submitted && (
-            <p className="mt-4 text-center text-[#0D4D66] font-semibold">
-              ✅ Thank you for contacting us! We will get back to you soon.
-            </p>
-          )}
         </form>
 
-      
-        <div className="bg-white p-8 rounded-2xl shadow-2xl border border-gray-300 flex flex-col">
-          <h2 className="text-3xl font-extrabold text-[#0D4D66] mb-6">Contact Information</h2>
-
-          <div className="space-y-6 text-gray-700 text-lg">
-            <p className="flex items-center gap-3">
-              <FaPhone className="text-[#0D4D66] w-5 h-5" />
+        {/* Contact Info */}
+        <div className="bg-white p-8 rounded-2xl shadow-md">
+          <h2 className="text-3xl font-bold mb-6 tracking-wide">Contact Information</h2>
+          <div className="space-y-4 text-lg">
+            <p className="flex items-center gap-3 text-[#365B73]">
+              <FaPhoneAlt className="text-[#A31621]" />
               +91-99999-88888
             </p>
-            <p className="flex items-center gap-3">
-              <FaEnvelope className="text-[#0D4D66] w-5 h-5" />
+            <p className="flex items-center gap-3 text-[#365B73]">
+              <FaEnvelope className="text-[#A31621]" />
               evently@gmail.com
             </p>
-            <p className="flex items-center gap-3">
-              <FaMapMarkedAlt className="text-[#0D4D66] w-5 h-5" />
+            <p className="flex items-center gap-3 text-[#365B73]">
+              <FaMapMarkerAlt className="text-[#A31621]" />
               Sunbeam Campus, Pune, India
             </p>
           </div>
-
           <iframe
             title="location"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.321891308322!2d73.84869481489178!3d18.562788287386665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf93b7fc11d1%3A0x12aa5d7339df685a!2sSunbeam%20Institute%20of%20Information%20Technology!5e0!3m2!1sen!2sin!4v1656773182811!5m2!1sen!2sin"
@@ -77,31 +83,11 @@ function ContactUs() {
             allowFullScreen=""
             loading="lazy"
             className="mt-6 rounded-xl"
-          />
+          ></iframe>
         </div>
       </div>
     </div>
   );
 }
-
-const InputField = React.forwardRef(({ placeholder, type = "text", ...rest }, ref) => (
-  <input
-    type={type}
-    placeholder={placeholder}
-    ref={ref}
-    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D4D66] text-gray-700"
-    {...rest}
-  />
-));
-
-const TextareaField = React.forwardRef(({ placeholder, ...rest }, ref) => (
-  <textarea
-    placeholder={placeholder}
-    ref={ref}
-    rows={5}
-    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D4D66] text-gray-700 resize-none"
-    {...rest}
-  />
-));
 
 export default ContactUs;
