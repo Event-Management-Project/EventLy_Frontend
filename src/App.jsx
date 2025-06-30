@@ -54,12 +54,8 @@ function App() {
      
       {/* SHubham */}
       <CustomerEventList />
-      <CustomerEventFilters />
       <CustomerEventDetailsPage />
       <OrganiserEventList />
-      <OrganiserEventFilters />
-      <CustomerEventCard />
-      <OrganiserEventCard />
       
       {/* farhan */}
       <BookingForm />
