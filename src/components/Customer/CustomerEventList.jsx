@@ -14,6 +14,7 @@ const CustomerEventList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 12;
 
+  // Load mock events
   useEffect(() => {
     const mockEvents = [...Array(30)].map((_, i) => ({
       id: i + 1,
@@ -25,39 +26,42 @@ const CustomerEventList = () => {
       imageUrl: `https://source.unsplash.com/400x250/?event,${i + 1}`,
     }));
     setEvents(mockEvents);
-    setFilteredEvents(mockEvents);
   }, []);
 
-  const applyFilters = (newFilters) => {
-    setFilters(newFilters);
+  // Re-apply filters when filters or events change
+  useEffect(() => {
     let result = [...events];
 
-    if (newFilters.search) {
-      const lower = newFilters.search.toLowerCase();
+    const lowerSearch = filters.search.toLowerCase();
+
+    if (filters.search) {
       result = result.filter(
         (e) =>
-          e.title.toLowerCase().includes(lower) ||
-          e.location.toLowerCase().includes(lower) ||
-          e.organiser.toLowerCase().includes(lower)
+          e.title.toLowerCase().includes(lowerSearch) ||
+          e.location.toLowerCase().includes(lowerSearch) ||
+          e.organiser.toLowerCase().includes(lowerSearch)
       );
     }
 
-    if (newFilters.category) {
-      result = result.filter((e) => e.category === newFilters.category);
+    if (filters.category) {
+      result = result.filter((e) => e.category === filters.category);
     }
 
-    if (newFilters.date) {
-      result = result.filter((e) => e.startDate === newFilters.date);
+    if (filters.date) {
+      result = result.filter((e) => e.startDate === filters.date);
     }
 
     setFilteredEvents(result);
     setCurrentPage(1);
+  }, [filters, events]);
+
+  const handleApply = (newFilters) => {
+    setFilters(newFilters);
   };
 
   const handleClear = () => {
     const cleared = { search: "", category: "", date: "" };
     setFilters(cleared);
-    applyFilters(cleared);
   };
 
   const currentEvents = filteredEvents.slice(
@@ -68,7 +72,7 @@ const CustomerEventList = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto bg-white min-h-screen">
-      <CustomerEventFilters filters={filters} onApply={applyFilters} onClear={handleClear} />
+      <CustomerEventFilters filters={filters} onApply={handleApply} onClear={handleClear} />
 
       <h2 className="text-2xl font-bold text-[#333] mb-4">Events</h2>
 
