@@ -6,98 +6,72 @@ import {
 import { CalendarCheck2, Clock, History, IndianRupee } from 'lucide-react';
 
 const analytics = [
-  { label: 'Total Events', value: 38, icon: <CalendarCheck2 className="text-[#A31621] w-6 h-6" /> },
-  { label: 'Active Events', value: 12, icon: <Clock className="text-[#A31621] w-6 h-6" /> },
-  { label: 'Past Events', value: 26, icon: <History className="text-[#A31621] w-6 h-6" /> },
-  { label: 'Total Revenue', value: '₹1,20,000', icon: <IndianRupee className="text-[#A31621] w-6 h-6" /> },
+  { label: 'Total Events', value: 38, icon: <CalendarCheck2 className="text-[#F29F05] w-6 h-6" /> },
+  { label: 'Active Events', value: 12, icon: <Clock className="text-[#F29F05] w-6 h-6" /> },
+  { label: 'Past Events', value: 26, icon: <History className="text-[#F29F05] w-6 h-6" /> },
+  { label: 'Total Revenue', value: '₹1,20,000', icon: <IndianRupee className="text-[#F29F05] w-6 h-6" /> },
 ];
 
 const eventsData = [
-  { month: 'Jan', events: 4 },
-  { month: 'Feb', events: 6 },
-  { month: 'Mar', events: 7 },
-  { month: 'Apr', events: 5 },
-  { month: 'May', events: 3 },
-  { month: 'Jun', events: 8 },
+  { month: 'Jan', events: 4 }, { month: 'Feb', events: 6 },
+  { month: 'Mar', events: 7 }, { month: 'Apr', events: 5 },
+  { month: 'May', events: 3 }, { month: 'Jun', events: 8 },
   { month: 'Jul', events: 5 },
 ];
 
 const paymentData = [
-  { month: 'Jan', revenue: 12000 },
-  { month: 'Feb', revenue: 16000 },
-  { month: 'Mar', revenue: 21000 },
-  { month: 'Apr', revenue: 19000 },
-  { month: 'May', revenue: 14000 },
-  { month: 'Jun', revenue: 28000 },
+  { month: 'Jan', revenue: 12000 }, { month: 'Feb', revenue: 16000 },
+  { month: 'Mar', revenue: 21000 }, { month: 'Apr', revenue: 19000 },
+  { month: 'May', revenue: 14000 }, { month: 'Jun', revenue: 28000 },
   { month: 'Jul', revenue: 25000 },
 ];
 
 function OrganiserDashboard() {
-  const showAlert = (label) => {
-    alert(`Clicked on: ${label}`);
-  };
-
   return (
-    <div className="min-h-screen bg-[#FCF7F8] px-6 py-10">
-      <h2 className="text-4xl font-bold text-[#A31621] mb-10 text-center drop-shadow">
-        Organiser Dashboard
-      </h2>
+    <div className="bg-white min-h-screen p-6 text-gray-800">
+      <h2 className="text-3xl font-bold text-[#F29F05] mb-8">Organiser Dashboard</h2>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {analytics.map((item, idx) => (
-          <div
-            key={idx}
-            onClick={() => showAlert(item.label)}
-            className="bg-white shadow-xl rounded-3xl p-6 flex items-center gap-4 hover:shadow-2xl transition cursor-pointer border-t-4 border-[#A31621]"
-          >
-            <div className="bg-[#FFF0F1] p-3 rounded-full">{item.icon}</div>
+          <div key={idx} className="bg-[#FDF9F0] border border-[#F2B705] rounded-xl p-5 flex items-center gap-4 hover:shadow-md transition">
+            <div className="bg-[#FFF4D6] p-3 rounded-full">{item.icon}</div>
             <div>
-              <p className="text-sm text-gray-500">{item.label}</p>
-              <p className="text-2xl font-bold text-gray-800">{item.value}</p>
+              <p className="text-sm text-gray-600">{item.label}</p>
+              <p className="text-2xl font-bold text-gray-900">{item.value}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Charts */}
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Events Bar Chart */}
-        <div className="bg-white border border-[#EAD4D8] shadow-md p-6 rounded-2xl hover:shadow-lg transition">
-          <h3 className="text-xl font-semibold text-[#A31621] mb-4 text-center">
-            Monthly Events Organised
-          </h3>
-          <ResponsiveContainer width="100%" height={300}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Events Chart */}
+        <div className="bg-white border border-[#F2B705] rounded-xl p-6 shadow-sm">
+          <h3 className="text-xl font-semibold text-[#F29F05] mb-4">Monthly Events</h3>
+          <ResponsiveContainer width="100%" height={250}>
             <BarChart data={eventsData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" stroke="#A31621" />
-              <YAxis stroke="#A31621" />
+              <CartesianGrid stroke="#eee" strokeDasharray="3 3" />
+              <XAxis dataKey="month" stroke="#F29F05" />
+              <YAxis stroke="#F29F05" />
               <Tooltip />
               <Legend />
-              <Bar dataKey="events" fill="#FFB6B9" radius={[10, 10, 0, 0]} />
+              <Bar dataKey="events" fill="#F2B705" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Revenue Line Chart */}
-        <div className="bg-white border border-[#EAD4D8] shadow-md p-6 rounded-2xl hover:shadow-lg transition">
-          <h3 className="text-xl font-semibold text-[#A31621] mb-4 text-center">
-            Monthly Payments Received
-          </h3>
-          <ResponsiveContainer width="100%" height={300}>
+        {/* Revenue Chart */}
+        <div className="bg-white border border-[#F2B705] rounded-xl p-6 shadow-sm">
+          <h3 className="text-xl font-semibold text-[#F29F05] mb-4">Monthly Payments</h3>
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart data={paymentData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" stroke="#A31621" />
-              <YAxis stroke="#A31621" />
+              <CartesianGrid stroke="#eee" strokeDasharray="3 3" />
+              <XAxis dataKey="month" stroke="#F29F05" />
+              <YAxis stroke="#F29F05" />
               <Tooltip />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                stroke="#6C3483"
-                strokeWidth={3}
-                dot={{ r: 6 }}
-              />
+              <Line type="monotone" dataKey="revenue" stroke="#F2B705" strokeWidth={3} dot={{ r: 4, fill: '#F2B705' }} />
             </LineChart>
           </ResponsiveContainer>
         </div>

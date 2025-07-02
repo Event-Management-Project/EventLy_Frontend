@@ -27,14 +27,18 @@ import AddEvent from "./components/Events/AddEvent";
 import EditEvent from "./components/Events/EditEvent";
 import AddEventFacilities from "./components/Events/AddEventFacilities";
 import NotificationModal from "./pages/NotificationModal";
+import OrganiserFooter from "./components/Organiser/OrganiserFooter";
+import OrganiserLayout from "./components/Organiser/OrganiserLayout";
 
 function App() {
   return (
 <div>
       {/* Rusikesh */}
-      <OrganiserNavbar />
+      <OrganiserLayout />
+      {/* <OrganiserNavbar />   */}
       <OrganiserProfile />
-      <OrganiserSidebar />
+      {/* <OrganiserSidebar /> */}
+      <OrganiserFooter /> 
       <OrganiserNotifications />
       <OrganiserDashboard />
       <AddEvent />
@@ -42,7 +46,7 @@ function App() {
       <AddEventFacilities />
      
       {/* Sourabh */}
-      <NotificationModal/>
+      {/* <NotificationModal/> */}
       <CustomerProfile />
       <CustomerSidebar />
       <CustomerNavbar />

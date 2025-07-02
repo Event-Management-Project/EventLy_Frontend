@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -23,33 +23,80 @@ function EditEvent() {
     end_dateTime: "",
   });
 
+  const [existingImages, setExistingImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const categories = ["Tech", "Business", "Music", "Education"];
+
+  useEffect(() => {
+    const mockData = {
+      evt_title: "Demo Event",
+      description: "Sample description for the event.",
+      location: "Mumbai",
+      ticket_price: "500",
+      capacity: "100",
+      category: "Music",
+      start_dateTime: "2025-10-01T18:00",
+      end_dateTime: "2025-10-01T21:00",
+      images: [
+        "https://via.placeholder.com/150",
+        "https://via.placeholder.com/150/FFB6C1",
+      ],
+    };
+    setEventData(mockData);
+    setExistingImages(mockData.images);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "images") {
-      const filesArr = Array.from(files);
-      setSelectedImages(filesArr);
-      setPreviewUrls(filesArr.map((file) => URL.createObjectURL(file)));
+      const newFiles = Array.from(files);
+      const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+      setSelectedImages((prev) => [...prev, ...newFiles]);
+      setPreviewUrls((prev) => [...prev, ...newPreviews]);
     } else {
-      setEventData({ ...eventData, [name]: value });
+      setEventData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleRemoveImage = (indexToRemove) => {
+    setSelectedImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+    setPreviewUrls((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("🎉 Event Updated Successfully (Mock)!");
+
+    const formData = new FormData();
+    Object.entries(eventData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    selectedImages.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    console.log("Submitted Event Data:", Object.fromEntries(formData.entries()));
+    alert("Event updated (simulated)!");
+    setSuccessMessage("Event updated successfully!");
+
+    setTimeout(() => setSuccessMessage(""), 4000);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fce4ec] via-[#f8bbd0] to-[#fce4ec] flex items-center justify-center p-6">
-      <div className="max-w-2xl w-full bg-white rounded-3xl shadow-2xl border border-pink-100 p-8">
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-pink-700 flex items-center justify-center gap-2">
+    <div className="min-h-screen bg-[#fef8ec] flex items-center justify-center p-6">
+      <div className="max-w-4xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-8">
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-[#F2B33D] flex items-center justify-center gap-2">
           <FaFolderOpen /> Edit Event
         </h2>
+
+        {successMessage && (
+          <div className="mb-4 text-green-600 font-medium text-center">
+            {successMessage}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <InputField
@@ -69,9 +116,9 @@ function EditEvent() {
             isTextarea
           />
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block mb-1 text-pink-700 font-medium">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-1 min-w-0">
+              <label className="block mb-1 text-[#333333] font-medium">
                 Start Date & Time
               </label>
               <InputField
@@ -83,8 +130,8 @@ function EditEvent() {
                 required
               />
             </div>
-            <div className="flex-1">
-              <label className="block mb-1 text-pink-700 font-medium">
+            <div className="flex-1 min-w-0">
+              <label className="block mb-1 text-[#333333] font-medium">
                 End Date & Time
               </label>
               <InputField
@@ -126,9 +173,10 @@ function EditEvent() {
             required
           />
 
-          {/* Category Dropdown */}
           <div className="relative">
-            <label className="block mb-1 text-pink-700 font-medium">Category</label>
+            <label className="block mb-1 text-[#333333] font-medium">
+              Category
+            </label>
             <div className="relative">
               <div className="absolute left-3 top-3.5 text-gray-400">
                 <FaListAlt />
@@ -138,7 +186,7 @@ function EditEvent() {
                 value={eventData.category}
                 required
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-600 outline-none bg-white"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white"
               >
                 <option value="">Select Category</option>
                 {categories.map((cat, i) => (
@@ -150,8 +198,7 @@ function EditEvent() {
             </div>
           </div>
 
-          {/* Upload Images */}
-          <label className="w-full flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-pink-50 text-gray-600 cursor-pointer hover:bg-pink-100 transition">
+          <label className="w-full flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-pointer hover:bg-gray-100">
             <FaImage />
             <input
               type="file"
@@ -167,20 +214,43 @@ function EditEvent() {
           {previewUrls.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
               {previewUrls.map((src, idx) => (
-                <img
-                  key={idx}
-                  src={src}
-                  alt={`Preview ${idx}`}
-                  className="w-full h-32 object-cover rounded-xl border-2 border-pink-300"
-                />
+                <div key={idx} className="relative group">
+                  <img
+                    src={src}
+                    alt={`Preview ${idx}`}
+                    className="w-full h-32 object-cover rounded-xl"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(idx)}
+                    className="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-xs px-2 py-0.5 rounded hidden group-hover:block"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
             </div>
           )}
 
-          <button
-            type="submit"
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-lg transition transform hover:scale-105 duration-300 shadow-md"
-          >
+          {existingImages.length > 0 && (
+            <div>
+              <p className="font-semibold mb-2 mt-4 text-[#333333]">
+                Existing Images
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {existingImages.map((url, idx) => (
+                  <img
+                    key={idx}
+                    src={url}
+                    alt={`Event ${idx}`}
+                    className="w-full h-32 object-cover rounded-xl"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button className="w-full bg-[#F2B33D] hover:bg-yellow-500 text-white font-semibold py-3 rounded-lg transition mt-2">
             Update Event
           </button>
         </form>
@@ -208,7 +278,7 @@ function InputField({
             name={name}
             value={value}
             placeholder={placeholder}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-600 outline-none bg-white"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-[#333333]"
             {...rest}
           />
         </>
@@ -220,7 +290,7 @@ function InputField({
             value={value}
             placeholder={placeholder}
             rows="3"
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-600 outline-none bg-white"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-[#333333]"
             {...rest}
           />
         </>
