@@ -30,6 +30,8 @@ import AddEventFacilities from "./components/Events/AddEventFacilities";
 import NotificationModal from "./pages/NotificationModal";
 import OrganiserFooter from "./components/Organiser/OrganiserFooter";
 import OrganiserLayout from "./components/Organiser/OrganiserLayout";
+import PaymentPage from "./components/Events/PaymentPage";
+import AddCategory from "./components/Events/AddCategory";
 
 function App() {
   return (
@@ -61,6 +63,8 @@ function App() {
       <OrganiserEventList />
       
       {/* farhan */}
+      <AddCategory/>
+      <PaymentPage/>
       <BookingForm />
       <AttendeeList />
       <AboutUs />

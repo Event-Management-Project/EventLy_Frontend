@@ -3,9 +3,7 @@ import React, { useState, useEffect } from "react";
 function BookingFormPage() {
   const [eventName, setEventName] = useState("Loading...");
   const pricePerTicket = 250;
-
   const [attendees, setAttendees] = useState(1);
-  const [specialRequests, setSpecialRequests] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -18,29 +16,25 @@ function BookingFormPage() {
     const total = attendees * pricePerTicket;
 
     alert(
-      `Booking Details:
-Event: ${eventName}
-Attendees: ${attendees}
-Special Requests: ${specialRequests || "None"}
-Total Amount: ₹${total}`
+      `Booking Confirmed!\n\nEvent: ${eventName}\nAttendees: ${attendees}\nTotal: ₹${total}`
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-[#fef8ec] p-8 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-white to-[#f5f3ff] p-8 flex items-center justify-center">
       <div className="max-w-lg w-full bg-white rounded-3xl shadow-xl p-10">
-        <h2 className="text-3xl font-extrabold text-[#F2B33D] text-center mb-2">
+        <h2 className="text-3xl font-extrabold text-[#4b3a9b] text-center mb-2">
           Book Your Event
         </h2>
-        <p className="text-center text-lg text-[#333333] mb-8 font-medium">
-          <span className="font-semibold text-[#F2B33D]">Event:</span> {eventName}
+        <p className="text-center text-lg text-[#4b5563] mb-8 font-medium">
+          <span className="font-semibold text-[#4b3a9b]">Event:</span> {eventName}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
               htmlFor="attendees"
-              className="block text-sm font-semibold text-[#333333] mb-1"
+              className="block text-sm font-semibold text-[#4b5563] mb-1"
             >
               Number of Attendees:
             </label>
@@ -50,38 +44,21 @@ Total Amount: ₹${total}`
               min="1"
               value={attendees}
               onChange={(e) => setAttendees(parseInt(e.target.value) || 1)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F2B33D]"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4b3a9b]"
               required
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="specialRequests"
-              className="block text-sm font-semibold text-[#333333] mb-1"
-            >
-              Special Requests:
-            </label>
-            <textarea
-              id="specialRequests"
-              value={specialRequests}
-              onChange={(e) => setSpecialRequests(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F2B33D]"
-              rows="3"
-              placeholder="Any specific arrangements or notes..."
-            />
-          </div>
-
-          <p className="text-lg font-semibold text-[#333333]">
+          <p className="text-lg font-semibold text-[#4b5563]">
             Total: ₹{" "}
-            <span className="text-[#F2B33D] font-bold">
+            <span className="text-[#4b3a9b] font-bold">
               {attendees * pricePerTicket}
             </span>
           </p>
 
           <button
             type="submit"
-            className="w-full bg-[#F2B33D] hover:bg-yellow-400 text-[#333333] font-semibold py-3 rounded-lg text-lg transition"
+            className="w-full bg-[#4b3a9b] hover:bg-[#372e70] text-white font-semibold py-3 rounded-lg text-lg transition"
           >
             Confirm Booking
           </button>
