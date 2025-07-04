@@ -4,13 +4,13 @@ import { RiLockPasswordLine } from "react-icons/ri";
 
 function Profile({ role = "customer", defaultData }) {
   const isOrganiser = role === "organiser";
- 
+
   const theme = {
-    background: isOrganiser ? "#FCF7F8" : "#EFEAFF",
-    primary: isOrganiser ? "#A31621" : "#6A4FB6",
-    primaryHover: isOrganiser ? "#8F121C" : "#5a3fa1",
-    secondary: isOrganiser ? "#0D4D66" : "#0D4D66",
-    secondaryHover: isOrganiser ? "#09394D" : "#b63c7a",
+    background: isOrganiser ? "#FFF7D1" : "#EFEAFF",
+    primary: isOrganiser ? "#F29F05" : "#6A4FB6",
+    primaryHover: isOrganiser ? "#F2B705" : "#5a3fa1",
+    secondary: isOrganiser ? "#A64B2A" : "#0D4D66",
+    secondaryHover: isOrganiser ? "#8C3E22" : "#b63c7a",
   };
 
   const [profile, setProfile] = useState(
@@ -54,9 +54,6 @@ function Profile({ role = "customer", defaultData }) {
       className="min-h-screen p-8"
       style={{
         backgroundColor: theme.background,
-        backgroundImage: isOrganiser
-          ? "radial-gradient(circle at top left, #fff8f8, #ffe5e5)"
-          : "none",
       }}
     >
       <h2
