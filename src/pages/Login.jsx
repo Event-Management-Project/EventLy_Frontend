@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaKey } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [userType, setUserType] = useState("CUSTOMER");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,18 +12,26 @@ function Login() {
     e.preventDefault();
 
     console.log("Logged in:", { email, password, userType });
-
-    
+    if (userType == "ORGANISER") {
+      navigate("/organiser");
+    }
+    if (userType == "CUSTOMER") {
+      navigate("/customer");
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#9FBFC5] flex items-center justify-center p-8">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border border-gray-300">
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-[#0D4D66]">Sign In</h2>
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-[#0D4D66]">
+          Sign In
+        </h2>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-lg font-medium text-[#0D4D66] mb-2">Type of user</label>
+            <label className="block text-lg font-medium text-[#0D4D66] mb-2">
+              Type of user
+            </label>
             <div className="flex gap-8 justify-center">
               <label className="flex items-center space-x-2 text-[#0D4D66]">
                 <input
@@ -80,7 +90,13 @@ function Login() {
         </form>
 
         <div className="mt-6 text-center text-sm text-[#0D4D66]">
-          Don't have an account? <span className="font-semibold cursor-default">Sign up</span>
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-[#0D4D66] font-semibold hover:underline"
+          >
+            Sign up
+          </Link>
         </div>
       </div>
     </div>

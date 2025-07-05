@@ -14,7 +14,6 @@ const CustomerEventList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 12;
 
-  // Load mock events
   useEffect(() => {
     const mockEvents = [...Array(30)].map((_, i) => ({
       id: i + 1,
@@ -28,7 +27,6 @@ const CustomerEventList = () => {
     setEvents(mockEvents);
   }, []);
 
-  // Re-apply filters when filters or events change
   useEffect(() => {
     let result = [...events];
 
@@ -74,7 +72,7 @@ const CustomerEventList = () => {
     <div className="p-6 max-w-7xl mx-auto bg-white min-h-screen">
       <CustomerEventFilters filters={filters} onApply={handleApply} onClear={handleClear} />
 
-      <h2 className="text-2xl font-bold text-[#333] mb-4">Events</h2>
+      <h2 className="text-2xl font-bold text-[#4b3a9b] mb-4">Events</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentEvents.length ? (

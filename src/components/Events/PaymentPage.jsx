@@ -1,10 +1,14 @@
-import React from 'react';
+import React from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 function PaymentPage() {
-  const total = 500; 
-  
+  const { eventId } = useParams();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const total = state?.total || 0;
+
   const handlePayment = () => {
-    alert("Payment successful!");
+    navigate(`/customer/events/${eventId}/success`);
   };
 
   return (
@@ -13,7 +17,8 @@ function PaymentPage() {
         <h2 className="text-3xl font-extrabold text-[#4b3a9b] mb-6">Payment</h2>
 
         <p className="text-lg mb-8 font-semibold text-[#2e2e2e]">
-          Total Amount: ₹ <span className="text-[#4b3a9b] font-bold">{total}</span>
+          Total Amount: ₹{" "}
+          <span className="text-[#4b3a9b] font-bold">{total}</span>
         </p>
 
         <button

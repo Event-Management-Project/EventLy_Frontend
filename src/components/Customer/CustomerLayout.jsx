@@ -3,9 +3,7 @@ import { FiX } from 'react-icons/fi';
 import CustomerNavbar from './CustomerNavbar';
 import CustomerSidebar from './CustomerSidebar';
 import CustomerFooter from './CustomerFooter';
-import HeroSection from '../Sections/HeroSection';
-import CustomerEventList from './CustomerEventList';
-import FAQSection from '../Sections/FAQSection';
+import { Outlet } from 'react-router-dom';
 
 function CustomerLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,10 +48,7 @@ function CustomerLayout() {
         )}
 
         <main className="flex-1 p-6 space-y-12">
-          <HeroSection />
-          <CustomerEventList />
-          <FAQSection />
-
+          <Outlet/>
           <CustomerFooter />
         </main>
       </div>

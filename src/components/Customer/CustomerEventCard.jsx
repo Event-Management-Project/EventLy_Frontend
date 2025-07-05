@@ -1,8 +1,15 @@
-import React from 'react';
-import { FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+import React from "react";
+import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function CustomerEventCard({ event }) {
-  const safeEvent = event || { title: 'No Title', category: 'Unknown', location: 'N/A', startDate: 'N/A', id: 'default-id' };
+  const safeEvent = event || {
+    title: "No Title",
+    category: "Unknown",
+    location: "N/A",
+    startDate: "N/A",
+    id: "default-id",
+  };
 
   return (
     <div className="bg-white rounded-3xl shadow-md p-4 hover:shadow-xl transition-all relative">
@@ -27,10 +34,8 @@ function CustomerEventCard({ event }) {
         <span>{safeEvent.startDate}</span>
       </div>
 
-      <button
-        className="mt-4 w-full bg-[#4b3a9b] text-white font-semibold py-2 px-4 rounded-xl hover:bg-[#372e70] transition-all"
-      >
-        View Details
+      <button className="mt-4 w-full bg-[#4b3a9b] text-white font-semibold py-2 px-4 rounded-xl hover:bg-[#372e70] transition-all">
+        <Link to={`/customer/events/${event.id}/description`}>View Details</Link>
       </button>
     </div>
   );

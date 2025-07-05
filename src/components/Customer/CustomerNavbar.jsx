@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiBell, FiMenu } from 'react-icons/fi';
-import { Heart, BookOpen, LogOut } from 'lucide-react';
+import { BookOpen, LogOut } from 'lucide-react';
 import NotificationBell from '../../pages/Notifications';
+import { Link } from 'react-router-dom';
 
 function CustomerNavbar({ onMenuClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,9 +15,6 @@ function CustomerNavbar({ onMenuClick }) {
   };
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
-  const goToFavourites = () => {
-    setMenuOpen(false);
-  };
   const goToBookingHistory = () => {
     setMenuOpen(false);
   };
@@ -60,18 +58,13 @@ function CustomerNavbar({ onMenuClick }) {
         {menuOpen && (
           <div className="absolute top-full right-4 mt-2 w-56 bg-white rounded-xl shadow-xl py-2 z-50 border border-[#E5E0FA]">
             <button
-              onClick={goToFavourites}
-              className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"
-            >
-              <Heart className="w-4 h-4 text-[#D14B8F]" />
-              Favourite Events
-            </button>
-            <button
               onClick={goToBookingHistory}
               className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"
             >
               <BookOpen className="w-4 h-4 text-[#6A4FB6]" />
+              <Link to={"/customer/bookings/1"}> 
               Booking History
+              </Link>
             </button>
             <button
               className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"

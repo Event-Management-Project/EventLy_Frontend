@@ -1,5 +1,6 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function TicketSuccessPage() {
   return (
@@ -16,7 +17,12 @@ function TicketSuccessPage() {
         <button className="bg-[#4b3a9b] hover:bg-[#3a2f7e] text-white font-semibold px-6 py-3 rounded-lg text-base transition">
           Download Ticket (PDF)
         </button>
-        Back to Home
+        <Link
+          to="/customer"
+          className="block mt-6 text-sm font-bold text-[#4b3a9b] hover:underline"
+        >
+          Back to Home
+        </Link>
       </div>
     </div>
   );

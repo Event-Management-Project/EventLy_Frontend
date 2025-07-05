@@ -22,7 +22,6 @@ function OrganiserSidebar({ onLinkClick, isMobile = false, isBottom = false }) {
   ];
 
   const handleClick = (label) => {
-    // Placeholder routing behavior
     onLinkClick?.(label) || alert(`${label} clicked! (routing disabled)`);
   };
 

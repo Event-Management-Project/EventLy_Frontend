@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   FiHome,
   FiCalendar,
@@ -6,42 +7,49 @@ import {
   FiMail,
   FiUser,
   FiLogOut,
-} from 'react-icons/fi';
+} from "react-icons/fi";
 
 function CustomerSidebar({ onLinkClick, isMobile = false, isBottom = false }) {
+  const location = useLocation();
+
   const topNavItems = [
-    { label: 'Home', icon: <FiHome /> },
-    { label: 'Events', icon: <FiCalendar /> },
-    { label: 'About Us', icon: <FiInfo /> },
-    { label: 'Contact Us', icon: <FiMail /> },
+    { to: "/customer", label: "Home", icon: <FiHome /> },
+    { to: "/customer/events", label: "Events", icon: <FiCalendar /> },
+    { to: "/customer/about", label: "About Us", icon: <FiInfo /> },
+    { to: "/customer/contact", label: "Contact Us", icon: <FiMail /> },
   ];
 
   const bottomNavItems = [
-    { label: 'Profile', icon: <FiUser /> },
-    { label: 'Logout', icon: <FiLogOut />, className: 'text-red-500' },
+    { to: "/customer/profile", label: "Profile", icon: <FiUser /> },
+    { to: "/", label: "Logout", icon: <FiLogOut />, className: "text-red-500" },
   ];
 
-  const renderButton = (item) => {
+  const renderLink = (item) => {
+    const isActive = location.pathname === item.to;
     return (
-      <button
+      <Link
         key={item.label}
-        onClick={() => onLinkClick?.(item.label)}
+        to={item.to}
+        onClick={onLinkClick}
         className={`flex items-center gap-3 px-4 py-3 rounded-xl 
           font-medium text-gray-700 hover:bg-[#ccbbf2]/30 hover:text-[#4b3a9b] transition
-          ${item.className || ''}
+          ${isActive ? "bg-[#ccbbf2]/40 text-[#4b3a9b] font-semibold" : ""} 
+          ${item.className || ""}
         `}
       >
         {item.icon}
         <span>{item.label}</span>
-      </button>
+      </Link>
     );
   };
 
   if (isBottom) {
     return (
       <div className="flex flex-col gap-2">
-        {bottomNavItems.map(renderButton)}
-        <div className="text-sm text-center text-gray-400 pt-4">© 2025 Evently</div>
+        {bottomNavItems.map(renderLink)}
+        <div className="text-sm text-center text-gray-400 pt-4">
+          © 2025 Evently
+        </div>
       </div>
     );
   }
@@ -49,21 +57,21 @@ function CustomerSidebar({ onLinkClick, isMobile = false, isBottom = false }) {
   return (
     <aside
       className={`${
-        isMobile ? 'w-full' : 'w-64 h-[calc(100vh-4rem)] hidden md:flex'
+        isMobile ? "w-full" : "w-64 h-[calc(100vh-4rem)] hidden md:flex"
       } flex flex-col justify-between ${
         !isMobile
-          ? 'rounded-tr-3xl bg-gradient-to-b from-white to-[#ccbbf2]/20 shadow-xl p-6'
-          : ''
+          ? "rounded-tr-3xl bg-gradient-to-b from-white to-[#ccbbf2]/20 shadow-xl p-6"
+          : ""
       }`}
     >
-      <div className="flex flex-col gap-2">
-        {topNavItems.map(renderButton)}
-      </div>
+      <div className="flex flex-col gap-2">{topNavItems.map(renderLink)}</div>
 
       {!isMobile && (
         <div className="mt-auto flex flex-col gap-2 pt-6">
-          {bottomNavItems.map(renderButton)}
-          <div className="text-sm text-center text-gray-400 pt-4">© 2025 Evently</div>
+          {bottomNavItems.map(renderLink)}
+          <div className="text-sm text-center text-gray-400 pt-4">
+            © 2025 Evently
+          </div>
         </div>
       )}
     </aside>

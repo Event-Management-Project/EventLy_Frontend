@@ -1,29 +1,33 @@
-import React from 'react';
+import React from "react";
+import { Link, useParams } from "react-router-dom";
 
-function EventDetailsPage({ eventId }) {
+function EventDetailsPage() {
   const event = {
-    evt_title: 'Tech Conference 2025',
-    description: 'Join the biggest tech conference of the year with industry leaders!',
-    location: 'Mumbai, India',
-    start_dateTime: '2025-09-01T10:00:00',
-    end_dateTime: '2025-09-03T18:00:00',
+    evt_title: "Tech Conference 2025",
+    description:
+      "Join the biggest tech conference of the year with industry leaders!",
+    location: "Mumbai, India",
+    start_dateTime: "2025-09-01T10:00:00",
+    end_dateTime: "2025-09-03T18:00:00",
     ticket_price: 250.0,
     capacity: 1000,
     remaining_capacity: 120,
     organiser: {
-      org_company_name: 'TechWorld Pvt Ltd',
-      email: 'organizer@techworld.com',
-      phone_no: '9876543210',
-      address: 'Pune, Maharashtra',
+      org_company_name: "TechWorld Pvt Ltd",
+      email: "organizer@techworld.com",
+      phone_no: "9876543210",
+      address: "Pune, Maharashtra",
     },
-    facilities: ['Free Wi‑Fi', 'Food Court', 'Parking', 'Workshops'],
+    facilities: ["Free Wi‑Fi", "Food Court", "Parking", "Workshops"],
     images: [
-      'https://via.placeholder.com/800x500?text=Main+Image',
-      'https://via.placeholder.com/400x240?text=Side+1',
-      'https://via.placeholder.com/400x240?text=Side+2',
+      "https://via.placeholder.com/800x500?text=Main+Image",
+      "https://via.placeholder.com/400x240?text=Side+1",
+      "https://via.placeholder.com/400x240?text=Side+2",
     ],
   };
 
+  const {eventId}=useParams()
+  console.log(eventId)
   const handleBooking = () => {
     window.location.href = `/customer/events/${eventId}/book`;
   };
@@ -62,7 +66,7 @@ function EventDetailsPage({ eventId }) {
             <div className="flex items-center gap-3">
               <span className="font-semibold">Date:</span>
               <span>
-                {new Date(event.start_dateTime).toLocaleDateString()} -{' '}
+                {new Date(event.start_dateTime).toLocaleDateString()} -{" "}
                 {new Date(event.end_dateTime).toLocaleDateString()}
               </span>
             </div>
@@ -109,7 +113,7 @@ function EventDetailsPage({ eventId }) {
             onClick={handleBooking}
             className="inline-flex items-center justify-center bg-[#4b3a9b] hover:bg-[#372e70] text-white px-8 py-4 rounded-xl text-xl font-medium transition duration-300"
           >
-            Book Event
+            <Link to={`/customer/events/${eventId}/book`}>Book Event</Link>
           </button>
         </div>
       </div>
