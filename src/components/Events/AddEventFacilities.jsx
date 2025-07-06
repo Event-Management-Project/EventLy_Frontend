@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function AddEventFacilities() {
   const [allFacilities, setAllFacilities] = useState([
@@ -10,6 +11,11 @@ function AddEventFacilities() {
 
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [newFacility, setNewFacility] = useState("");
+  const navigate = useNavigate();
+
+  const navigateToEvent = ()=>{
+     navigate('/organiser/events')
+  }
 
   const toggleFacility = (fst_id) => {
     setSelectedFacilities((prev) =>
@@ -33,9 +39,6 @@ function AddEventFacilities() {
     setNewFacility("");
   };
 
-  const handleSubmit = () => {
-    alert("Facilities saved!");
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-[#fef8ec] flex items-center justify-center p-6">
@@ -78,7 +81,7 @@ function AddEventFacilities() {
         </div>
 
         <button
-          onClick={handleSubmit}
+          onClick={navigateToEvent}
           className="w-full bg-[#F2B33D] text-[#333333] py-3 rounded-lg font-semibold hover:bg-yellow-400"
         >
           Save Facilities

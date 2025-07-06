@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import OrganiserNavbar from './OrganiserNavbar';
 import OrganiserSidebar from './OrganiserSidebar';
 import OrganiserFooter from './OrganiserFooter';
@@ -47,12 +48,12 @@ function OrganiserLayout() {
                     </div>
                 )}
 
-                <main className="flex-1 p-6">
-                    <div className="text-gray-700 font-semibold text-2xl">
-                        <OrganiserDashboard />
-                    </div>
-                    <OrganiserFooter />
+      
+               <main className="flex-1 p-6">
+                 <Outlet />
+                 <OrganiserFooter />
                 </main>
+
             </div>
         </div>
     );

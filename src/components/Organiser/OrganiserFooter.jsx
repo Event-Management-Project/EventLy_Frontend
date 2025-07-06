@@ -6,6 +6,7 @@ import {
   FaLinkedinIn,
   FaYoutube,
 } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 function OrganiserFooter() {
   return (
@@ -24,11 +25,11 @@ function OrganiserFooter() {
         <div>
           <h4 className="text-lg font-semibold mb-3">Manage</h4>
           <ul className="space-y-2 text-sm text-gray-600">
-            <li>Dashboard</li>
-            <li>My Events</li>
-            <li>Add New Event</li>
-            <li>Attendee List</li>
-            <li>Contact Support</li>
+            <li><Link to={"/organiser"}> Dashboard</Link></li>
+            <li><Link to={"/organiser/events"}> My Events</Link></li>
+            <li><Link to={"/organiser/events/add"}> Add New Event</Link></li>
+            <li><Link to={"/organiser/events/reviews"}> Attendee List</Link></li>
+            <li><Link to={"/organiser/contact"}> Contact Support</Link></li>
           </ul>
         </div>
 

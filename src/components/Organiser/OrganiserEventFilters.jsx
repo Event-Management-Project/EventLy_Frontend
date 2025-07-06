@@ -8,6 +8,7 @@ import {
   FaListUl,
   FaPlus,
 } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const OrganiserEventFilters = ({
   filters = {},
@@ -16,49 +17,63 @@ const OrganiserEventFilters = ({
   isPast,
   toggleIsPast,
 }) => {
+
+  const navigate = useNavigate()
   const handleFilterChange = (updatedFilters) => {
     onChange(updatedFilters);
-    console.log('🔍 Auto-applied filters:', updatedFilters);
   };
 
   const handleAddCategory = () => {
-    alert('Add category functionality to be implemented');
+    navigate("/organiser/events/add-category")
   };
 
+ const handleAddEvent = () => {
+    navigate("/organiser/events/add")
+  };
+
+
+
   return (
-<div className="organiser-filters bg-[#FEF8EC] rounded-3xl shadow-md p-4 mb-6">
+    <div className="organiser-filters bg-[#FEF8EC] rounded-3xl shadow-md p-4 mb-6">
       <div className="flex flex-wrap justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-[#F2B33D]">Filter Events</h2>
-        <button
-          onClick={toggleIsPast}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-            isPast
+        <div className='flex justify-content'>
+
+          <button
+            onClick={toggleIsPast}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${isPast
               ? 'bg-[#F2B33D] text-white hover:bg-yellow-500'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          {isPast ? 'Show Upcoming Events' : 'Show Past Events'}
-        </button>
+              }`}
+          >
+            {isPast ? 'Show Upcoming Events' : 'Show Past Events'}
+          </button>
+          <button
+          onClick={handleAddEvent}
+          className='px-4 py-2 rounded-full text-sm font-medium bg-[#F2B33D]'>
+            Add Event
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-       <div className="flex flex-col col-span-2">
-  <label className="text-gray-700 text-sm font-medium mb-1">
-    Search Category & Location
-  </label>
-  <div className="relative">
-    <input
-      type="text"
-      placeholder="Search events by name, category or location"
-      className="w-full p-2 pl-10 border rounded-lg"
-      value={filters.search || ''}
-      onChange={(e) =>
-        handleFilterChange({ ...filters, search: e.target.value })
-      }
-    />
-    <FaSearch className="absolute left-3 top-3 text-gray-400" />
-  </div>
-</div>
+        <div className="flex flex-col col-span-2">
+          <label className="text-gray-700 text-sm font-medium mb-1">
+            Search Category & Location
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search events by name, category or location"
+              className="w-full p-2 pl-10 border rounded-lg"
+              value={filters.search || ''}
+              onChange={(e) =>
+                handleFilterChange({ ...filters, search: e.target.value })
+              }
+            />
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
+          </div>
+        </div>
 
 
         <div className="flex flex-col">
@@ -73,7 +88,7 @@ const OrganiserEventFilters = ({
           </label>
           <div className="relative">
             <select
-            className="w-full p-2 border border-[#ccbbf2] rounded-lg focus:ring-2 focus:ring-[#F2B33D] bg-[#f4f1fc] text-gray-800"
+              className="w-full p-2 border border-[#ccbbf2] rounded-lg focus:ring-2 focus:ring-[#F2B33D] bg-[#f4f1fc] text-gray-800"
               value={filters.category || ''}
               onChange={(e) =>
                 handleFilterChange({ ...filters, category: e.target.value })
@@ -121,7 +136,7 @@ const OrganiserEventFilters = ({
           Clear
         </button>
       </div>
-     <style jsx global>{`
+      <style jsx global>{`
   .organiser-filters .react-datepicker {
     border-radius: 0.75rem;
     border: 1px solid #f2b33d;
