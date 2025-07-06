@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import OrganiserEventCard from "./OrganiserEventCard";
 import OrganiserEventFilters from "./OrganiserEventFilters";
+import AddCategory from "../Events/AddCategory";
 
 const allEvents = [
   {
@@ -39,6 +40,7 @@ function OrganiserEventList() {
   const [filters, setFilters] = useState({});
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [isPast, setIsPast] = useState(false);
+  const [categories, setCategories] = useState(["Music", "Tech", "Sports", "Business"]);
 
   const toggleIsPast = () => setIsPast(!isPast);
 
@@ -51,7 +53,6 @@ function OrganiserEventList() {
 
     let result = allEvents.filter((event) => {
       const eventDate = new Date(event.start_dateTime);
-
       const dateCheck = isPast ? eventDate < now : eventDate >= now;
 
       const keyword = (filters.search || "").toLowerCase();
@@ -85,6 +86,7 @@ function OrganiserEventList() {
         onClear={handleClear}
         isPast={isPast}
         toggleIsPast={toggleIsPast}
+        categories={categories} 
       />
 
       <div className="max-w-7xl mx-auto">
@@ -102,6 +104,7 @@ function OrganiserEventList() {
           <p className="text-gray-600">No events found for selected filters.</p>
         )}
       </div>
+
     </div>
   );
 }

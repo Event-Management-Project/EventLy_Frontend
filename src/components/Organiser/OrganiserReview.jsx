@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Star, StarOff, Info } from "lucide-react";
 
-const sampleOrganiserReviews = [
+const sampleReviews = [
   {
     id: 1,
     customerName: "Rohan Patel",
     email: "rohan@gmail.com",
     event: "Tech Expo 2025",
+    organiser: "Sunbeam Tech",
     rating: 4,
-    OrganiserReview: "Great event with insightful speakers!",
+    review: "Great event with insightful speakers!",
     submittedAt: "2025-07-18",
   },
   {
@@ -16,8 +17,9 @@ const sampleOrganiserReviews = [
     customerName: "Sneha Joshi",
     email: "sneha.j@gmail.com",
     event: "Startup Pitch Fest",
+    organiser: "Startup India",
     rating: 5,
-    OrganiserReview: "Very well organized and professional.",
+    review: "Very well organized and professional.",
     submittedAt: "2025-07-17",
   },
   {
@@ -25,8 +27,9 @@ const sampleOrganiserReviews = [
     customerName: "Nikhil Mehta",
     email: "nikhilm@example.com",
     event: "AI Summit",
+    organiser: "AI World",
     rating: 3,
-    OrganiserReview: "Good sessions, but could improve catering.",
+    review: "Good sessions, but could improve catering.",
     submittedAt: "2025-07-15",
   },
   {
@@ -34,8 +37,9 @@ const sampleOrganiserReviews = [
     customerName: "Anjali Shah",
     email: "anjali@gmail.com",
     event: "Tech Expo 2025",
+    organiser: "Sunbeam Tech",
     rating: 5,
-    OrganiserReview: "Amazing event and management!",
+    review: "Amazing event and management!",
     submittedAt: "2025-07-16",
   },
 ];
@@ -58,7 +62,7 @@ function OrganiserReviews() {
   const [search, setSearch] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const filtered = sampleOrganiserReviews.filter(
+  const filtered = sampleReviews.filter(
     (r) =>
       r.event.toLowerCase().includes(search.toLowerCase()) ||
       r.organiser.toLowerCase().includes(search.toLowerCase())
@@ -81,7 +85,7 @@ function OrganiserReviews() {
     <div className="min-h-screen bg-white p-6 pt-10 font-inter text-[#333333]">
       <div className="max-w-6xl w-full bg-white rounded-3xl shadow-2xl p-8 mx-auto">
         <h2 className="text-3xl font-extrabold text-center mb-6 text-[#F2B33D]">
-          Customer OrganiserReviews
+          Customer Reviews
         </h2>
 
         <div className="max-w-lg mx-auto mb-6">
@@ -104,7 +108,7 @@ function OrganiserReviews() {
           </div>
           <div className="text-center text-xl text-gray-800 mb-4">
             {totalRatings} Ratings &{" "}
-            {filtered.filter((r) => r.OrganiserReview?.trim() !== "").length} OrganiserReviews
+            {filtered.filter((r) => r.review?.trim() !== "").length} Reviews
           </div>
 
           <div className="space-y-2">
@@ -161,22 +165,22 @@ function OrganiserReviews() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((OrganiserReview) => (
+              {filtered.map((review) => (
                 <tr
-                  key={OrganiserReview.id}
+                  key={review.id}
                   className="border-t hover:bg-gray-50 transition"
                 >
-                  <td className="py-3 px-6">{OrganiserReview.customerName}</td>
-                  <td className="py-3 px-6">{OrganiserReview.email}</td>
-                  <td className="py-3 px-6">{OrganiserReview.event}</td>
-                  <td className="py-3 px-6">{renderStars(OrganiserReview.rating)}</td>
+                  <td className="py-3 px-6">{review.customerName}</td>
+                  <td className="py-3 px-6">{review.email}</td>
+                  <td className="py-3 px-6">{review.event}</td>
+                  <td className="py-3 px-6">{renderStars(review.rating)}</td>
                   <td className="py-3 px-6 italic text-gray-700">
-                    {OrganiserReview.OrganiserReview}
+                    {review.review}
                   </td>
-                  <td className="py-3 px-6">{OrganiserReview.submittedAt}</td>
+                  <td className="py-3 px-6">{review.submittedAt}</td>
                   <td className="py-3 px-6 text-center">
                     <button
-                      onClick={() => setSelectedEvent(OrganiserReview)}
+                      onClick={() => setSelectedEvent(review)}
                       className="text-[#F2B33D] hover:underline"
                     >
                       <Info className="w-5 h-5 inline" />
@@ -188,7 +192,6 @@ function OrganiserReviews() {
           </table>
         </div>
 
-        {/* Modal */}
         {selectedEvent && (
           <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-[#333333]">
@@ -199,14 +202,11 @@ function OrganiserReviews() {
                 ✕
               </button>
               <h3 className="text-xl font-bold text-[#F2B33D] mb-4">
-                OrganiserReview Details
+                Review Details
               </h3>
               <div className="space-y-2 text-sm text-gray-800">
                 <p>
                   <strong>Event:</strong> {selectedEvent.event}
-                </p>
-                <p>
-                  <strong>Organiser:</strong> {selectedEvent.organiser}
                 </p>
                 <p>
                   <strong>Customer:</strong> {selectedEvent.customerName}
@@ -221,7 +221,7 @@ function OrganiserReviews() {
                   <strong>Rating:</strong> {renderStars(selectedEvent.rating)}
                 </p>
                 <p>
-                  <strong>OrganiserReview:</strong> {selectedEvent.OrganiserReview}
+                  <strong>Review:</strong> {selectedEvent.review}
                 </p>
               </div>
               <button

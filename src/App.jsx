@@ -24,10 +24,8 @@ import AddCategory from "./components/Events/AddCategory";
 import { Route, Routes } from "react-router-dom";
 import CustomerLayout from "./components/Customer/CustomerLayout";
 import EventDetailsPage from "./components/Customer/CustomerEventDetailsPage";
-import OrganiserBookings from './components/Events/BookingForm';
 import OrganiserReviews from "./components/Organiser/OrganiserReview";
-
-
+import TicketPage from "./components/Events/TickitPage";
 
 function App() {
   return (
@@ -37,16 +35,19 @@ function App() {
       <Route path="/customer" element={<CustomerLayout />}>
         <Route index element={<CustomerHome />} />
         <Route path="events" element={<CustomerEventList />} />
-        <Route path="events/:eventId/description" element={<EventDetailsPage />} />
+        <Route
+          path="events/:eventId/description"
+          element={<EventDetailsPage />}
+        />
         <Route path="events/:eventId/book" element={<BookingForm />} />
         <Route path="events/:eventId/payment" element={<PaymentPage />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="events/:eventId/success" element={<TicketSuccessPage />} />
         <Route path="bookings/:customerId" element={<BookingHistory />} />
+        <Route path="tickit/download" element={<TicketPage />} />
         <Route path="profile" element={<CustomerProfile />} />
       </Route>
-
 
       <Route path="/organiser" element={<OrganiserLayout />}>
         <Route index element={<OrganiserDashboard />} />
@@ -62,8 +63,6 @@ function App() {
         <Route path="about" element={<AboutUs />} />
         <Route path="profile" element={<OrganiserProfile />} />
       </Route>
-
-
     </Routes>
   );
 }

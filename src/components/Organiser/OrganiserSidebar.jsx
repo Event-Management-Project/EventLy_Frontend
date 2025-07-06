@@ -21,7 +21,7 @@ function OrganiserSidebar({ onLinkClick, isMobile = false, isBottom = false }) {
     { to: '/organiser/bookings', label: 'Bookings', icon: <FiBookOpen /> },
     { to: '/organiser/reviews', label: 'Reviews', icon: <FiMessageCircle /> },
     { to: '/organiser/about', label: 'About Us', icon: < FiInfo /> },
-    { to: '/organiser/contact', label: 'Reviews', icon: <FiMail /> },
+    { to: '/organiser/contact', label: 'Contact Us', icon: <FiMail /> },
   ];
 
 

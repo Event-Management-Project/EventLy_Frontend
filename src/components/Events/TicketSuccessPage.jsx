@@ -1,8 +1,12 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function TicketSuccessPage() {
+  const navigate = useNavigate();
+  const handleDownload = () => {
+    navigate("/customer/tickit/download");
+  };
   return (
     <div className="min-h-screen bg-[#f5f3fb] flex items-center justify-center p-6">
       <div className="max-w-lg w-full bg-white rounded-3xl shadow-xl p-10 text-center">
@@ -14,7 +18,10 @@ function TicketSuccessPage() {
           Your ticket has been booked successfully. You can now download it as a
           PDF.
         </p>
-        <button className="bg-[#4b3a9b] hover:bg-[#3a2f7e] text-white font-semibold px-6 py-3 rounded-lg text-base transition">
+        <button
+          onClick={handleDownload}
+          className="bg-[#4b3a9b] hover:bg-[#3a2f7e] text-white font-semibold px-6 py-3 rounded-lg text-base transition"
+        >
           Download Ticket (PDF)
         </button>
         <Link

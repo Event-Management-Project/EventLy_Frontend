@@ -17,7 +17,6 @@ function ContactUs() {
   return (
     <div className="bg-[#FCF7F8] text-[#365B73] py-12 px-6 font-sans">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
-        {/* Contact Form */}
         <form
           onSubmit={handleSubmit}
           className="bg-white p-8 rounded-2xl shadow-md transition hover:shadow-lg"
@@ -57,7 +56,6 @@ function ContactUs() {
           </button>
         </form>
 
-        {/* Contact Info */}
         <div className="bg-white p-8 rounded-2xl shadow-md">
           <h2 className="text-3xl font-bold mb-6 tracking-wide">Contact Information</h2>
           <div className="space-y-4 text-lg">

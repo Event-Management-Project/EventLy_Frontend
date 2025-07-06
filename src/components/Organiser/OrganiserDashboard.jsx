@@ -31,7 +31,6 @@ function OrganiserDashboard() {
     <div className="bg-white min-h-screen p-6 text-gray-800">
       <h2 className="text-3xl font-bold text-[#F29F05] mb-8">Organiser Dashboard</h2>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {analytics.map((item, idx) => (
           <div key={idx} className="bg-[#FDF9F0] border border-[#F2B705] rounded-xl p-5 flex items-center gap-4 hover:shadow-md transition">
@@ -44,9 +43,7 @@ function OrganiserDashboard() {
         ))}
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Events Chart */}
         <div className="bg-white border border-[#F2B705] rounded-xl p-6 shadow-sm">
           <h3 className="text-xl font-semibold text-[#F29F05] mb-4">Monthly Events</h3>
           <ResponsiveContainer width="100%" height={250}>
@@ -61,7 +58,6 @@ function OrganiserDashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* Revenue Chart */}
         <div className="bg-white border border-[#F2B705] rounded-xl p-6 shadow-sm">
           <h3 className="text-xl font-semibold text-[#F29F05] mb-4">Monthly Payments</h3>
           <ResponsiveContainer width="100%" height={250}>

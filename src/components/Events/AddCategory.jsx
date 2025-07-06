@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddCategory = () => {
-  const [name, setName] = useState('');
-
+  const [name, setName] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Category Added: ${name}`);
-    setName('');
+    setName("");
+    navigate("/organiser/events");
   };
 
   return (
     <div className="max-w-xl mx-auto bg-[#FEF8EC] p-6 rounded-3xl shadow-md mt-10">
-      <h2 className="text-2xl font-bold text-[#F2B33D] mb-4 text-center">Add New Category</h2>
+      <h2 className="text-2xl font-bold text-[#F2B33D] mb-4 text-center">
+        Add New Category
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Category Name</label>
+          <label className="block text-gray-700 font-medium mb-1">
+            Category Name
+          </label>
           <input
             type="text"
             className="w-full p-2 border rounded-lg"
