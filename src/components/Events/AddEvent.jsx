@@ -10,6 +10,7 @@ import {
   FaFileAlt,
   FaListAlt,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function AddEvent({ onEventCreated }) {
   const [form, setForm] = useState({
@@ -26,6 +27,7 @@ function AddEvent({ onEventCreated }) {
 
   const categories = ["Tech", "Business", "Music", "Education"];
 
+  const navigate=useNavigate()
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
@@ -41,7 +43,7 @@ function AddEvent({ onEventCreated }) {
     if (onEventCreated) {
       onEventCreated(101);
     } else {
-      alert("🎉 Event created successfully!");
+   navigate("/organiser/events/add-facilities")
     }
   };
 
@@ -154,7 +156,7 @@ function AddEvent({ onEventCreated }) {
             type="submit"
             className="w-full bg-[#F2B33D] hover:bg-[#d9a024] text-white font-semibold py-3 rounded-xl transition duration-200 shadow-md"
           >
-            🚀 Create Event
+            Create Event
           </button>
         </form>
       </div>
