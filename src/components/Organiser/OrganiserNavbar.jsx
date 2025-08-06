@@ -2,18 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FiBell, FiMenu } from 'react-icons/fi';
 import { LayoutDashboard, BookOpen, LogOut } from 'lucide-react';
 import NotificationBell from '../../pages/Notifications';
+import { useSelector } from 'react-redux';
 
 function OrganiserNavbar({ onMenuClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+  const { organiser} =useSelector(state=>state.organiser)
 
   const user = {
-    name: 'Event Organiser',
-    avatarUrl:
-      'https://ui-avatars.com/api/?name=Organiser&background=F29F05&color=fff&rounded=true',
+    name: organiser?.organiserCompanyName,
+    
   };
 
-  const toggleMenu = () => setMenuOpen(prev => !prev);
 
   const handleClick = (action) => {
     alert(`${action} clicked`);

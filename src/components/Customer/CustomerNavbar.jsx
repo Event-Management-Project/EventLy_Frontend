@@ -1,17 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FiBell, FiMenu } from 'react-icons/fi';
-import { BookOpen, LogOut } from 'lucide-react';
-import NotificationBell from '../../pages/Notifications';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import { FiBell, FiMenu } from "react-icons/fi";
+import { BookOpen, LogOut } from "lucide-react";
+import NotificationBell from "../../pages/Notifications";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function CustomerNavbar({ onMenuClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
 
-  const user = {
-    name: 'Sourabh Magdum',
-    avatarUrl:
-      'https://ui-avatars.com/api/?name=Sourabh+M&background=6A4FB6&color=fff&rounded=true',
+  const customer = useSelector((state) => state.customer.customer);
+  console.log();
+  const getInitials = (fullName) => {
+    if (!fullName) return "G";
+    const names = fullName.trim().split(" ");
+    const initials = names.map((n) => n.charAt(0).toUpperCase()).join("");
+    return initials;
+  };
+
+  const initials = getInitials(customer?.customerName);
+
+  const user1 = {
+    name: customer?.customerName || "Guest",
+    avatarUrl: `https://ui-avatars.com/api/?name=${initials}&background=6A4FB6&color=fff&rounded=true`,
   };
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
@@ -25,8 +36,8 @@ function CustomerNavbar({ onMenuClick }) {
         setMenuOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -36,14 +47,14 @@ function CustomerNavbar({ onMenuClick }) {
       </h1>
 
       <div className="flex items-center gap-4 md:gap-6" ref={menuRef}>
-        <span className="font-medium text-gray-800">{user.name}</span>
+        <span className="font-medium text-gray-800">{user1.name}</span>
 
         <NotificationBell />
 
         <div className="flex items-center gap-2 cursor-pointer">
           <img
             onClick={toggleMenu}
-            src={user.avatarUrl}
+            src={user1.avatarUrl}
             alt="User Avatar"
             className="w-9 h-9 rounded-full border-2 border-[#6A4FB6]"
           />
@@ -62,13 +73,9 @@ function CustomerNavbar({ onMenuClick }) {
               className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"
             >
               <BookOpen className="w-4 h-4 text-[#6A4FB6]" />
-              <Link to={"/customer/bookings/1"}> 
-              Booking History
-              </Link>
+              <Link to={"/customer/bookings/1"}>Booking History</Link>
             </button>
-            <button
-              className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"
-            >
+            <button className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm">
               <LogOut className="w-4 h-4 text-gray-500" />
               Logout
             </button>

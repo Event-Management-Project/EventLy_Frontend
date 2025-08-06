@@ -1,22 +1,57 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaKey } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { loginCustomer } from "../services/CustomerService";
+import { useDispatch } from "react-redux";
+import { setCustomer } from "../redux/slices/CustomerSlice";
+import { setOrganiser } from "../redux/slices/OrganiserSlice";
+import { loginOrganiser } from "../services/OrganiserService";
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [userType, setUserType] = useState("CUSTOMER");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (email.trim().length === 0) {
+      toast.warn("Please enter email");
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      toast.warn("Invalid email format");
+    } else if (password.trim().length < 6) {
+      toast.warn("Password must be at least 6 characters");
+    } else {
+      try {
+        if (userType == "CUSTOMER") {
+          const data = {
+            email,
+            password
+          };
+          const result = await loginCustomer(data);
 
-    console.log("Logged in:", { email, password, userType });
-    if (userType == "ORGANISER") {
-      navigate("/organiser");
-    }
-    if (userType == "CUSTOMER") {
-      navigate("/customer");
+          console.log(result);
+
+          dispatch(setCustomer(result));
+          toast.success("Signed In successfully");
+          navigate("/customer");
+        }
+        if (userType == "ORGANISER") {
+          const data = {
+            email,
+            password,
+          };
+          const result = await loginOrganiser(data);
+
+          console.log(result);
+          dispatch(setOrganiser(result));
+          toast.success("Signed In successfully");
+          navigate("/organiser");
+        }
+      } catch (error) {
+        toast.error("Failed to log in", error);
+      }
     }
   };
 
@@ -27,7 +62,7 @@ function Login() {
           Sign In
         </h2>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="space-y-4">
           <div>
             <label className="block text-lg font-medium text-[#0D4D66] mb-2">
               Type of user
@@ -81,13 +116,14 @@ function Login() {
           </div>
 
           <button
+            onClick={handleSubmit}
             type="submit"
             className="w-full bg-[#0D4D66] hover:bg-teal-800 text-white font-semibold py-3 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <FaKey className="w-5 h-5" />
             <span className="text-base">Sign In</span>
           </button>
-        </form>
+        </div>
 
         <div className="mt-6 text-center text-sm text-[#0D4D66]">
           Don't have an account?{" "}

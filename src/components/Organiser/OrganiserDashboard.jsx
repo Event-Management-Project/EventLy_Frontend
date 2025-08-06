@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
   LineChart, Line, CartesianGrid
 } from 'recharts';
-import { CalendarCheck2, Clock, History, IndianRupee } from 'lucide-react';
+import { CalendarCheck2, Clock, History, IndianRupee, Ticket } from 'lucide-react';
+import axios from 'axios';
 
 const analytics = [
   { label: 'Total Events', value: 38, icon: <CalendarCheck2 className="text-[#F29F05] w-6 h-6" /> },
@@ -27,11 +28,20 @@ const paymentData = [
 ];
 
 function OrganiserDashboard() {
+  const [ticketsSold, setTicketsSold] = useState(0);
+
+  useEffect(() => {
+    // Replace with your backend API endpoint
+    axios.get('/api/organiser/tickets-sold')
+      .then(res => setTicketsSold(res.data.totalTickets))
+      .catch(err => console.error("Error fetching tickets sold:", err));
+  }, []);
+
   return (
     <div className="bg-white min-h-screen p-6 text-gray-800">
       <h2 className="text-3xl font-bold text-[#F29F05] mb-8">Organiser Dashboard</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
         {analytics.map((item, idx) => (
           <div key={idx} className="bg-[#FDF9F0] border border-[#F2B705] rounded-xl p-5 flex items-center gap-4 hover:shadow-md transition">
             <div className="bg-[#FFF4D6] p-3 rounded-full">{item.icon}</div>
@@ -41,6 +51,17 @@ function OrganiserDashboard() {
             </div>
           </div>
         ))}
+
+        {/* ✅ New Total Tickets Sold Card */}
+        <div className="bg-[#FDF9F0] border border-[#F2B705] rounded-xl p-5 flex items-center gap-4 hover:shadow-md transition">
+          <div className="bg-[#FFF4D6] p-3 rounded-full">
+            <Ticket className="text-[#F29F05] w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Total Tickets Sold</p>
+            <p className="text-2xl font-bold text-gray-900">{ticketsSold}</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -77,3 +98,4 @@ function OrganiserDashboard() {
 }
 
 export default OrganiserDashboard;
+
