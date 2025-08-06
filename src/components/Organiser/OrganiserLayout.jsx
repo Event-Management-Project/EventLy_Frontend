@@ -7,6 +7,7 @@ import { FiX } from 'react-icons/fi';
 import OrganiserDashboard from './OrganiserDashboard';
 
 function OrganiserLayout() {
+    
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
