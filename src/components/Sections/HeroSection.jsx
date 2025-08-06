@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const phrases = [
   "Discover unforgettable experiences!",
@@ -9,10 +10,10 @@ const phrases = [
 ];
 
 function HeroSection() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const currentPhrase = phrases[phraseIndex];
@@ -26,7 +27,7 @@ function HeroSection() {
       const timeout = setTimeout(() => {
         setCharIndex(0);
         setPhraseIndex((prev) => (prev + 1) % phrases.length);
-        setText('');
+        setText("");
       }, 2000);
       return () => clearTimeout(timeout);
     }
@@ -39,7 +40,9 @@ function HeroSection() {
       </h1>
 
       <p className="text-base sm:text-lg md:text-xl font-medium text-[#2D2D2D] min-h-[2.5rem]">
-        <span className="animate-pulse border-r-2 border-[#6A4FB6] pr-1">{text}</span>
+        <span className="animate-pulse border-r-2 border-[#6A4FB6] pr-1">
+          {text}
+        </span>
       </p>
 
       <div className="w-full max-w-2xl mx-auto mt-8 px-2">
@@ -55,8 +58,10 @@ function HeroSection() {
             className="ml-2 bg-[#CCBBF2] hover:bg-[#BBAAF0] text-white px-4 py-2 rounded-full transition flex items-center justify-center gap-2"
             title="Search"
           >
-            <Search className="w-5 h-5" />
-            <span className="hidden md:inline">Search</span>
+              <Search className="w-5 h-5" />
+            <Link to="/customer/events">
+              <span className="hidden md:inline">Search</span>
+            </Link>
           </button>
         </div>
       </div>

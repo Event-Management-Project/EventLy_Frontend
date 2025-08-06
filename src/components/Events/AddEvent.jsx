@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -11,6 +11,7 @@ import {
   FaListAlt,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { getCategories } from "../../services/EventService";
 
 function AddEvent({ onEventCreated }) {
   const [form, setForm] = useState({
@@ -25,9 +26,21 @@ function AddEvent({ onEventCreated }) {
     image: null,
   });
 
-  const categories = ["Tech", "Business", "Music", "Education"];
+  const [category, setCategory] = useState([]);
+  const navigate = useNavigate();
 
-  const navigate=useNavigate()
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await getCategories();
+        setCategory(response);
+      } catch (error) {
+        console.log("Error while fetching categories:", error);
+      }
+    };
+    fetchCategory();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
@@ -37,13 +50,12 @@ function AddEvent({ onEventCreated }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleCreateEvent = () => {
     console.log("Event Created:", form);
     if (onEventCreated) {
       onEventCreated(101);
     } else {
-   navigate("/organiser/events/add-facilities")
+      navigate("/organiser/events/add-facilities");
     }
   };
 
@@ -54,13 +66,14 @@ function AddEvent({ onEventCreated }) {
           <FaFolderPlus className="text-[#F2B33D]" /> Add New Event
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           <InputField
             icon={<FaFileAlt />}
             placeholder="Event Title"
             name="evt_title"
             required
             onChange={handleChange}
+            value={form.evt_title}
           />
           <InputField
             icon={<FaListAlt />}
@@ -68,6 +81,7 @@ function AddEvent({ onEventCreated }) {
             name="description"
             onChange={handleChange}
             isTextarea
+            value={form.description}
           />
 
           <div className="flex flex-col md:flex-row gap-6">
@@ -78,6 +92,7 @@ function AddEvent({ onEventCreated }) {
               label="Start Date & Time"
               required
               onChange={handleChange}
+              value={form.start_dateTime}
             />
             <InputField
               icon={<FaClock />}
@@ -86,6 +101,7 @@ function AddEvent({ onEventCreated }) {
               label="End Date & Time"
               required
               onChange={handleChange}
+              value={form.end_dateTime}
             />
           </div>
 
@@ -95,6 +111,7 @@ function AddEvent({ onEventCreated }) {
             name="location"
             required
             onChange={handleChange}
+            value={form.location}
           />
           <div className="flex flex-col md:flex-row gap-6">
             <InputField
@@ -104,6 +121,7 @@ function AddEvent({ onEventCreated }) {
               type="number"
               required
               onChange={handleChange}
+              value={form.capacity}
             />
             <InputField
               icon={<FaRupeeSign />}
@@ -113,6 +131,7 @@ function AddEvent({ onEventCreated }) {
               step="0.01"
               required
               onChange={handleChange}
+              value={form.ticket_price}
             />
           </div>
 
@@ -128,12 +147,13 @@ function AddEvent({ onEventCreated }) {
                 name="category"
                 required
                 onChange={handleChange}
+                value={form.category}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white shadow-sm"
               >
                 <option value="">Select Category</option>
-                {categories.map((cat, i) => (
-                  <option key={i} value={cat}>
-                    {cat}
+                {category.map((cat, i) => (
+                  <option key={i} value={cat.categoryName}>
+                    {cat.categoryName}
                   </option>
                 ))}
               </select>
@@ -152,13 +172,13 @@ function AddEvent({ onEventCreated }) {
             Upload Event Image
           </label>
 
-          <button
-            type="submit"
-            className="w-full bg-[#F2B33D] hover:bg-[#d9a024] text-white font-semibold py-3 rounded-xl transition duration-200 shadow-md"
+          <div
+            onClick={handleCreateEvent}
+            className="w-full bg-[#F2B33D] hover:bg-[#d9a024] text-white text-center font-semibold py-3 rounded-xl transition duration-200 shadow-md cursor-pointer"
           >
             Create Event
-          </button>
-        </form>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -171,21 +191,38 @@ function InputField({
   type = "text",
   isTextarea = false,
   label,
+  value,
   ...rest
 }) {
+  const isDateTime =
+    type === "datetime-local" && (name === "start_dateTime" || name === "end_dateTime");
+
+  const hasValue = value && value !== "";
+
   return (
     <div className="relative w-full">
       {label && (
         <label className="block mb-1 text-[#d99904] font-medium">{label}</label>
       )}
       <div className="relative">
-        <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
+        <div
+          className={`absolute left-3 top-3.5 ${
+            hasValue ? "text-white" : "text-gray-400"
+          }`}
+        >
+          {icon}
+        </div>
         {!isTextarea ? (
           <input
             type={type}
             name={name}
             placeholder={placeholder}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white shadow-sm"
+            value={value}
+            className={`w-full pl-10 pr-4 py-3 border rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-[#F2B33D] ${
+              isDateTime && hasValue
+                ? "bg-[#F2B33D] text-white placeholder-white focus:ring-white"
+                : "bg-white text-gray-800 border-gray-300"
+            }`}
             {...rest}
           />
         ) : (

@@ -82,15 +82,22 @@ function OrganiserDashboard() {
         <div className="bg-white border border-[#F2B705] rounded-xl p-6 shadow-sm">
           <h3 className="text-xl font-semibold text-[#F29F05] mb-4">Monthly Payments</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={paymentData}>
-              <CartesianGrid stroke="#eee" strokeDasharray="3 3" />
-              <XAxis dataKey="month" stroke="#F29F05" />
-              <YAxis stroke="#F29F05" />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="revenue" stroke="#F2B705" strokeWidth={3} dot={{ r: 4, fill: '#F2B705' }} />
-            </LineChart>
-          </ResponsiveContainer>
+  <LineChart data={paymentData}>
+    <CartesianGrid stroke="#eee" strokeDasharray="3 3" />
+    <XAxis dataKey="month" stroke="#822BD9" />
+    <YAxis stroke="#822BD9" />
+    <Tooltip />
+    <Legend />
+    <Line
+      type="monotone"
+      dataKey="revenue"
+      stroke="#D92588"
+      strokeWidth={3}
+      dot={{ r: 5, stroke: '#D92588', fill: '#F22771' }}
+    />
+  </LineChart>
+</ResponsiveContainer>
+
         </div>
       </div>
     </div>

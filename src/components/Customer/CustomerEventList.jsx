@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CustomerEventFilters from "./CustomerEventFilters";
 import CustomerEventCard from "./CustomerEventCard";
+import { getUpcomingEvents } from "../../services/EventService";
 
 const CustomerEventList = () => {
   const [filters, setFilters] = useState({
@@ -14,17 +15,16 @@ const CustomerEventList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 12;
 
+  const fetchUpcomingEvents = async () => {
+    try {
+      const result = await getUpcomingEvents();
+      setEvents(result);
+    } catch (error) {
+      console.log("failded to fetch events", error);
+    }
+  };
   useEffect(() => {
-    const mockEvents = [...Array(30)].map((_, i) => ({
-      id: i + 1,
-      title: `Event ${i + 1}`,
-      category: ["Music", "Tech", "Sports"][i % 3],
-      location: `City ${i % 5}`,
-      organiser: `Organiser ${i % 4}`,
-      startDate: "2025-07-20",
-      imageUrl: `https://source.unsplash.com/400x250/?event,${i + 1}`,
-    }));
-    setEvents(mockEvents);
+    fetchUpcomingEvents();
   }, []);
 
   useEffect(() => {
@@ -35,18 +35,30 @@ const CustomerEventList = () => {
     if (filters.search) {
       result = result.filter(
         (e) =>
-          e.title.toLowerCase().includes(lowerSearch) ||
-          e.location.toLowerCase().includes(lowerSearch) ||
-          e.organiser.toLowerCase().includes(lowerSearch)
+          (e.eventTitle || "").toLowerCase().includes(lowerSearch) ||
+          (e.location || "").toLowerCase().includes(lowerSearch) ||
+          (e.organiser || "").toLowerCase().includes(lowerSearch)
       );
     }
 
     if (filters.category) {
-      result = result.filter((e) => e.category === filters.category);
+      result = result.filter((e) => e.categoryName === filters.category);
     }
 
     if (filters.date) {
-      result = result.filter((e) => e.startDate === filters.date);
+      const filterDate = new Date(filters.date);
+
+      result = result.filter((e) => {
+        if (!e.startDateTime) return false;
+
+        const eventDate = new Date(e.startDateTime);
+
+        return (
+          eventDate.getFullYear() === filterDate.getFullYear() &&
+          eventDate.getMonth() === filterDate.getMonth() &&
+          eventDate.getDate() === filterDate.getDate()
+        );
+      });
     }
 
     setFilteredEvents(result);
@@ -70,7 +82,11 @@ const CustomerEventList = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto bg-white min-h-screen">
-      <CustomerEventFilters filters={filters} onApply={handleApply} onClear={handleClear} />
+      <CustomerEventFilters
+        filters={filters}
+        onApply={handleApply}
+        onClear={handleClear}
+      />
 
       <h2 className="text-2xl font-bold text-[#4b3a9b] mb-4">Events</h2>
 
@@ -80,7 +96,9 @@ const CustomerEventList = () => {
             <CustomerEventCard key={event.id} event={event} />
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500">No events found.</p>
+          <p className="col-span-full text-center text-gray-500">
+            No events found.
+          </p>
         )}
       </div>
 

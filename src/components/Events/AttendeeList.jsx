@@ -1,49 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { MapPin, Mail, User, Users, CreditCard, X } from "lucide-react";
 import { FaEye } from "react-icons/fa";
+import { fetchEventAttendee } from "../../services/EventService";
+import { useSelector } from "react-redux";
+import { BiCalendarEvent } from "react-icons/bi";
 
 function AttendeeList() {
+  const organiser = useSelector((state) => state.organiser.organiser);
+  console.log(organiser)
   const [attendees, setAttendees] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const getEventAttendees= async()=>{
+    try{
+      const result=await fetchEventAttendee(organiser.orgId)
+      console.log(result)
+      setAttendees(result)
+    }
+    catch(error){
+      console.log("error in fetching the event attendees")
+      throw error;
+    }
+  }
 
-  useEffect(() => {
-    const dummyAttendees = [
-      {
-        booking_id: 1,
-        name: "Rohit Sharma",
-        email: "rohit.sharma@example.com",
-        attendee_count: 2,
-        amount_paid: 1500,
-        location: "Pune, Maharashtra",
-      },
-      {
-        booking_id: 2,
-        name: "Sneha Mehta",
-        email: "sneha.mehta@example.com",
-        attendee_count: 1,
-        amount_paid: 750,
-        location: "Mumbai, Maharashtra",
-      },
-      {
-        booking_id: 3,
-        name: "Aman Verma",
-        email: "aman.verma@example.com",
-        attendee_count: 3,
-        amount_paid: 2250,
-        location: "Delhi",
-      },
-      {
-        booking_id: 4,
-        name: "Sara Khan",
-        email: "sara.khan@example.com",
-        attendee_count: 2,
-        amount_paid: 1800,
-        location: "Bengaluru",
-      },
-    ];
-
-    setTimeout(() => setAttendees(dummyAttendees), 500);
-  }, []);
+  useEffect(()=>{
+    getEventAttendees()
+  },[])
+  
+   
 
   return (
     <div className="p-6 min-h-screen bg-white">
@@ -55,22 +38,25 @@ function AttendeeList() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {attendees.map((user) => (
+          {attendees.map((user,index) => (
             <div
-              key={user.booking_id}
+              key={index}
               className="bg-white shadow-xl rounded-2xl p-6 border border-gray-100 hover:shadow-2xl transition"
             >
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xl font-semibold text-[#333333]">{user.name}</h3>
+                <h3 className="text-xl font-semibold text-[#333333]">{user.customerName}</h3>
               </div>
               <p className="flex items-center text-gray-700 mb-1">
                 <Mail className="w-4 h-4 mr-2 text-[#F2B33D]" /> {user.email}
               </p>
               <p className="flex items-center text-gray-700 mb-1">
-                <Users className="w-4 h-4 mr-2 text-[#F2B33D]" /> Attendees: {user.attendee_count}
+                <Users className="w-4 h-4 mr-2 text-[#F2B33D]" /> Attendees: {user.attendeeCount}
               </p>
               <p className="flex items-center text-gray-700 mb-1">
-                <CreditCard className="w-4 h-4 mr-2 text-[#F2B33D]" /> ₹ {user.amount_paid}
+                <BiCalendarEvent className="w-4 h-4 mr-2 text-[#F2B33D]" /> Event: {user.eventTitle}
+              </p>
+              <p className="flex items-center text-gray-700 mb-1">
+                <CreditCard className="w-4 h-4 mr-2 text-[#F2B33D]" /> ₹ {user.ticketPrice}
               </p>
               <p className="flex items-center justify-between text-gray-700">
                 <span className="flex items-center">
@@ -107,7 +93,7 @@ function AttendeeList() {
             <div className="space-y-3 text-gray-700">
               <p className="flex items-center">
                 <User className="w-5 h-5 mr-2 text-[#F2B33D]" />
-                {selectedUser.name}
+                {selectedUser.customerName}
               </p>
               <p className="flex items-center">
                 <Mail className="w-5 h-5 mr-2 text-[#F2B33D]" />

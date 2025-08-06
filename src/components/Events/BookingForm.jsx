@@ -1,27 +1,42 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { createBooking } from "../../services/BookingService";
 
 function BookingFormPage() {
   const { eventId } = useParams();
   const navigate = useNavigate();
-
-  const [eventName, setEventName] = useState("Loading...");
-  const pricePerTicket = 250;
+  const location = useLocation();
 
   const [attendees, setAttendees] = useState(1);
+  const eventNameFromLocation = location.state?.eventName;
+  const [eventName] = useState(eventNameFromLocation || "Loading...");
+  const pricePerTicket = location.state?.eventPrice;
 
-  useEffect(() => {
-    setTimeout(() => {
-      setEventName("React Conference 2025");
-    }, 500);
-  }, []);
+  console.log(eventName, pricePerTicket);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const customerId = useSelector((state) => state.customer.customer?.id);
+  console.log(customerId)
+
+  const handleBook = async () => {
     const total = attendees * pricePerTicket;
-    navigate(`/customer/events/${eventId}/payment`, {
-      state: { attendees, total },
-    });
+
+    try {
+      const response = await createBooking(customerId, eventId, attendees);
+      console.log(response.data);
+      const booking = response.data;
+
+      navigate(`/customer/events/${eventId}/payment`, {
+        state: {
+          bookingId: booking.id,
+          attendees: booking.totalAttendee,
+          total,
+          eventName,
+        },
+      });
+    } catch (error) {
+      alert("Failed to create booking. Please try again." + error);
+    }
   };
 
   return (
@@ -35,7 +50,7 @@ function BookingFormPage() {
           {eventName}
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           <div>
             <label className="block text-sm font-semibold text-[#2e2e2e] mb-1">
               Number of Attendees:
@@ -58,12 +73,13 @@ function BookingFormPage() {
           </p>
 
           <button
+            onClick={handleBook}
             type="submit"
             className="w-full bg-[#4b3a9b] hover:bg-[#3a2f7e] text-white font-semibold py-3 rounded-lg text-lg transition"
           >
             Proceed to Payment
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

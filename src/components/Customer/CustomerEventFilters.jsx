@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaSearch, FaCalendar, FaCalendarAlt } from "react-icons/fa";
+import { getCategories } from "../../services/EventService";
 
 const CustomerEventFilters = ({ filters, onApply, onClear }) => {
+  const [category, setCategory] = useState([]);
+
   const handleInputChange = (field, value) => {
     const updatedFilters = { ...filters, [field]: value };
     onApply(updatedFilters);
   };
+  
+
+  const handleCategoryFetch = async () => {
+    try {
+      const result = await getCategories();
+      setCategory(result);
+    } catch (error) {
+      console.log("Failed to fetch categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleCategoryFetch();
+  }, []);
 
   return (
     <div className="customer-filters bg-gradient-to-br from-white to-[#f9f7ff] rounded-3xl shadow-xl p-6 mb-6 max-w-4xl mx-auto">
@@ -38,9 +55,11 @@ const CustomerEventFilters = ({ filters, onApply, onClear }) => {
             onChange={(e) => handleInputChange("category", e.target.value)}
           >
             <option value="">All</option>
-            <option value="Music">Music</option>
-            <option value="Tech">Tech</option>
-            <option value="Sports">Sports</option>
+            {category.map((cat, index) => (
+              <option key={index} value={cat.categoryName}>
+                {cat.categoryName}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -77,7 +96,7 @@ const CustomerEventFilters = ({ filters, onApply, onClear }) => {
         </button>
       </div>
 
-      <style jsx global>{`
+      <style>{`
         .customer-filters .react-datepicker {
           border-radius: 0.75rem;
           border: 1px solid #4b3a9b;
