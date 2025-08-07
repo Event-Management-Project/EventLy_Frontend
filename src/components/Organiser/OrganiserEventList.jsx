@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import OrganiserEventCard from "./OrganiserEventCard";
 import OrganiserEventFilters from "./OrganiserEventFilters";
-import { fetchOrganiserEvents } from "../../services/EventService";
 import { useSelector } from "react-redux";
+import { deleteEventById, fetchOrganiserEvents } from "../../services/EventService";
 
 function OrganiserEventList() {
   const organiser = useSelector((state) => state.organiser.organiser);
@@ -10,25 +13,65 @@ function OrganiserEventList() {
   const [filters, setFilters] = useState({});
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [isPast, setIsPast] = useState(false);
-
-  const handleOrganiserEventFetch = async () => {
-    try {
-      const result = await fetchOrganiserEvents(organiser.orgId);
-      setEvents(result);
-    } catch (error) {
-      console.error("Failed to fetch organiser events", error);
-    }
-  };
+  const [categories, setCategories] = useState([]);
 
   const toggleIsPast = () => setIsPast(!isPast);
 
   useEffect(() => {
-    handleOrganiserEventFetch();
+    fetchEvents();
   }, []);
+
+  const handleDelete = async (event) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the event "${event.eventTitle}"?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await deleteEventById(event.id);
+      toast.success("Event deleted successfully");
+      setEvents(prevEvents => prevEvents.filter(e => e.id !== event.id));
+    } catch (error) {
+      console.error("Event deletion failed:", error.response?.data || error.message || error);
+      toast.error(
+        "Event deletion failed: " +
+        (error.response?.data?.message || error.message || "Unknown error")
+      );
+    }
+
+  };
+
 
   useEffect(() => {
     applyFilters(filters);
   }, [filters, isPast, events]);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetchOrganiserEvents(organiser.orgId)
+      const backendEvents = response;
+      console.log(response)
+      const formattedEvents = backendEvents.map((e) => ({
+        id: e.eventId,
+        description: e.description,
+        eventTitle: e.eventTitle,
+        startDateTime: e.startDateTime,
+        endDateTime: e.endDateTime,
+        location: e.location,
+        ticketPrice: e.ticketPrice,
+        categoryName: e.categoryName,
+        capacity: e.capacity,
+        imageUrl: e.imageUrl,
+      }));
+
+      setEvents(formattedEvents);
+
+      const uniqueCategories = [...new Set(formattedEvents.map((e) => e.categoryName))];
+      setCategories(uniqueCategories);
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
+  };
 
   const applyFilters = (filters) => {
     const now = new Date();
@@ -39,9 +82,9 @@ function OrganiserEventList() {
 
       const keyword = (filters.search || "").toLowerCase();
       const matchesKeyword =
-        event.eventTitle.toLowerCase().includes(keyword) ||
-        event.categoryName.toLowerCase().includes(keyword) ||
-        event.location.toLowerCase().includes(keyword);
+        (event.eventTitle?.toLowerCase() || "").includes(keyword) ||
+        (event.categoryName?.toLowerCase() || "").includes(keyword) ||
+        (event.location?.toLowerCase() || "").includes(keyword);
 
       const matchesCategory =
         !filters.category || filters.category === event.categoryName;
@@ -68,6 +111,7 @@ function OrganiserEventList() {
         onClear={handleClear}
         isPast={isPast}
         toggleIsPast={toggleIsPast}
+        categories={categories}
       />
 
       <div className="max-w-7xl mx-auto">
@@ -82,12 +126,14 @@ function OrganiserEventList() {
                 key={event.id}
                 event={event}
                 isPast={isPast}
+                onDelete={handleDelete}
               />
             ))}
           </div>
         ) : (
           <p className="text-gray-600">No events found for selected filters.</p>
         )}
+
       </div>
     </div>
   );

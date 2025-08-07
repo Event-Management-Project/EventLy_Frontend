@@ -3,11 +3,12 @@ import { MessageSquare, Star } from "lucide-react";
 import { HiCheckCircle, HiClock } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../services/BookingService";
-import { useNavigate, useParams } from "react-router-dom";
-import { addReviews } from "../../services/Reviews";
+import { useNavigate } from "react-router-dom";
+import { addReviews, checkReviewExists } from "../../services/Reviews";
 
 function BookingHistory() {
   const [bookings, setBookings] = useState([]);
+  const [reviewsExistMap, setReviewsExistMap] = useState({}); // key: evtId, value: true/false
   const [selectedReview, setSelectedReview] = useState(null);
   const [review, setReview] = useState({ subject: "", description: "" });
   const [rating, setRating] = useState(0);
@@ -15,19 +16,40 @@ function BookingHistory() {
 
   const customer = useSelector((state) => state.customer.customer);
   const navigate = useNavigate();
-  // const { eventId } = useParams();
 
   useEffect(() => {
-    if (customer?.id) {
+    if (customer?.cstId) {
       getBookingHistory();
     }
   }, [customer]);
 
+  // Fetch bookings and then check reviews existence for confirmed bookings
   const getBookingHistory = async () => {
     try {
-      const result = await fetchBookingHistory(customer.id);
-      console.log(result);
+      const result = await fetchBookingHistory(customer.cstId);
       setBookings(result);
+
+      // Now check reviews for confirmed bookings
+      const confirmedBookings = result.filter(
+        (booking) => booking.status.toLowerCase() === "confirmed"
+      );
+
+      // Map of eventId to review existence boolean
+      const map = {};
+
+      await Promise.all(
+        confirmedBookings.map(async (booking) => {
+          try {
+            const res = await checkReviewExists(customer.cstId, booking.evtId);
+            map[booking.evtId] = res.exists;
+          } catch (err) {
+            // On error, assume no review
+            map[booking.evtId] = false;
+          }
+        })
+      );
+
+      setReviewsExistMap(map);
     } catch (error) {
       console.error("Failed to fetch bookings:", error);
     }
@@ -52,9 +74,19 @@ function BookingHistory() {
 
     try {
       setLoading(true);
+
+      // Double check review existence before submit
+      const checkResult = await checkReviewExists(customer.cstId, selectedReview.evtId);
+
+      if (checkResult.exists) {
+        alert("You have already added a review for this event.");
+        setLoading(false);
+        return;
+      }
+
       const data = {
-        customerId: customer.id,
-        evtId: selectedReview.evtId,
+        customerId: customer.cstId,
+        eventId: selectedReview.evtId,
         subject: review.subject,
         description: review.description,
         star: rating,
@@ -62,12 +94,20 @@ function BookingHistory() {
 
       const result = await addReviews(data);
       console.log("Review submitted:", result);
+
+      // Update reviewsExistMap so UI reflects the new review state
+      setReviewsExistMap((prev) => ({
+        ...prev,
+        [selectedReview.evtId]: true,
+      }));
+
       setSelectedReview(null);
       setReview({ subject: "", description: "" });
       setRating(0);
       getBookingHistory();
     } catch (error) {
       console.error("Error in adding review:", error);
+      alert("Failed to submit review, please try again.");
     } finally {
       setLoading(false);
     }
@@ -109,56 +149,65 @@ function BookingHistory() {
         <table className="w-full text-sm text-left">
           <thead className="bg-purple-100 text-gray-700">
             <tr>
-              {["Event", "Location", "Category", "Date", "Seats", "Price", "Status", "Review"].map((head) => (
-                <th key={head} className="px-4 py-3 font-medium">
-                  {head}
-                </th>
-              ))}
+              {["Event", "Location", "Category", "Date", "Seats", "Price", "Status", "Review"].map(
+                (head) => (
+                  <th key={head} className="px-4 py-3 font-medium">
+                    {head}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {bookings.map((booking, idx) => (
-              <tr
-                key={idx}
-                className={`transition-colors duration-150 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-purple-50`}
-              >
-                <td className="px-4 py-3 font-medium text-purple-700">
-                  {booking.eventTitle}
-                </td>
-                <td className="px-4 py-3">{booking.location}</td>
-                <td className="px-4 py-3">{booking.category}</td>
-                <td className="px-4 py-3">
-                  {new Date(booking.bookingDate.split(".")[0]).toLocaleString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
-                </td>
-                <td className="px-4 py-3">{booking.attendee}</td>
-                <td className="px-4 py-3">₹{booking.price}</td>
-                <td className="px-4 py-3">{renderStatus(booking.status, booking)}</td>
-                <td className="px-4 py-3">
-                  {booking.status.toLowerCase() === "confirmed" ? (
-                    <button
-                      onClick={() => {
-                        setSelectedReview(booking);
-                        setReview({ subject: "", description: "" });
-                        setRating(0);
-                      }}
-                      className="flex items-center text-purple-600 hover:underline"
-                    >
-                      <MessageSquare className="w-4 h-4 mr-1" />
-                      Review
-                    </button>
-                  ) : (
-                    <span className="text-gray-400 text-sm">N/A</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {bookings.map((booking, idx) => {
+              const status = booking.status.toLowerCase();
+              const reviewed = reviewsExistMap[booking.evtId];
+
+              return (
+                <tr
+                  key={idx}
+                  className={`transition-colors duration-150 ${
+                    idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-purple-50`}
+                >
+                  <td className="px-4 py-3 font-medium text-purple-700">{booking.eventTitle}</td>
+                  <td className="px-4 py-3">{booking.location}</td>
+                  <td className="px-4 py-3">{booking.category}</td>
+                  <td className="px-4 py-3">
+                    {new Date(booking.bookingDate.split(".")[0]).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
+                  </td>
+                  <td className="px-4 py-3">{booking.attendee}</td>
+                  <td className="px-4 py-3">₹{booking.price}</td>
+                  <td className="px-4 py-3">{renderStatus(booking.status, booking)}</td>
+                  <td className="px-4 py-3">
+                    {status === "pending" ? (
+                      <span className="text-gray-400 text-sm">N/A</span>
+                    ) : status === "confirmed" && !reviewed ? (
+                      <button
+                        onClick={() => {
+                          setSelectedReview(booking);
+                          setReview({ subject: "", description: "" });
+                          setRating(0);
+                        }}
+                        className="flex items-center text-purple-600 hover:underline"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-1" />
+                        Review
+                      </button>
+                    ) : (
+                      <span className="text-green-600 font-semibold text-sm">Reviewed</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -179,16 +228,7 @@ function BookingHistory() {
   );
 }
 
-function ReviewModal({
-  booking,
-  rating,
-  setRating,
-  review,
-  setReview,
-  onClose,
-  onSubmit,
-  loading,
-}) {
+function ReviewModal({ booking, rating, setRating, review, setReview, onClose, onSubmit, loading }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">

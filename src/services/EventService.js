@@ -18,7 +18,6 @@ export const getCategories = async () => {
 
 export const eventDetails = async (eventId) => {
   try {
-    // event/eventDetail
     const response = await axios.get(`${config.eventServiceUrl}/event/eventDetail/${eventId}`);
     return response.data;
   } catch (error) {
@@ -53,7 +52,6 @@ export const fetchOrganiserEvents = async (orgId) => {
 
 export const fetchEventAttendee = async (orgId) => {
   try {
-    // event/eventAttendee/21
     const response = await axios.get(`${config.eventServiceUrl}/event/eventAttendee/${orgId}`)
     return response.data;
 
@@ -75,3 +73,75 @@ export const getEventInfo = async (eventId)=>{
     throw error
   }
 }
+
+export const fetchCustomerReviews = async (orgId) => {
+  try {
+    const response = await axios.get(`${config.eventServiceUrl}/event/customerReviews/${orgId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching customer reviews:", error);
+    throw error;
+  }
+};
+
+
+export const createEvent = async (formData, organiserId) => {
+  try {
+    const response = await axios.post(
+      `${config.eventServiceUrl}/event/addEvent`,
+      formData,
+      {
+        params: {
+          organiser_id: organiserId,
+        },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Event creation failed:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateEvent = async (eventId, formData) => {
+  try {
+    const response = await axios.put(
+      `${config.eventServiceUrl}/event/editEvent/${eventId}`,
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update event:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const addCategory = async (categoryName) => {
+  try {
+    const response = await axios.post(`${config.eventServiceUrl}/category`, {
+      categoryName: categoryName,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to add category"
+    );
+  }
+};
+
+export const deleteEventById = async (id) => {
+  try {
+    const response = await axios.put(`${config.eventServiceUrl}/event/deleteEvent/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Event deletion failed:", error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+
+

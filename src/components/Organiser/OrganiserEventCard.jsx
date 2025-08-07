@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   FaMapMarkerAlt,
   FaCalendarAlt,
@@ -7,13 +9,15 @@ import {
   FaPen,
   FaTrash,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 const formatDateTime = (dateStr) => {
   const date = new Date(dateStr);
-  return date.toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
+  return date.toLocaleString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -21,15 +25,15 @@ const OrganiserEventCard = ({ event, isPast = false, onDelete }) => {
   const navigate = useNavigate();
 
   const handleEdit = () => {
-    navigate(`/organiser/events/${event.id}/edit`);
+    navigate(`/organiser/events/${event.id}/edit`, { state: { event } });
   };
 
   return (
     <div className="bg-[#FFFDF3] rounded-3xl shadow-md p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-[#fef3c7] flex flex-col justify-between">
       <div className="relative w-full h-44 mb-4">
-        {event.eventImage ? (
+        {event.imageUrl ? (
           <img
-            src={event.eventImage}
+            src={event.imageUrl}
             alt={event.eventTitle}
             className="w-full h-full object-cover rounded-2xl"
           />
@@ -39,7 +43,6 @@ const OrganiserEventCard = ({ event, isPast = false, onDelete }) => {
           </div>
         )}
 
-        {/* Category badge */}
         <span className="absolute top-2 right-2 bg-[#fef3c7] text-[#b88700] text-xs font-semibold px-3 py-1 rounded-full shadow-sm border border-[#f2d680]">
           {event.categoryName}
         </span>

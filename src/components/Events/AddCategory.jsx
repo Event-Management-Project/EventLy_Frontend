@@ -1,13 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addCategory } from "../../services/EventService";
 
 const AddCategory = () => {
   const [name, setName] = useState("");
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setName("");
-    navigate("/organiser/events");
+    setError(null);
+
+    try {
+      await addCategory(name);  // <-- pass the string directly here, NOT { name }
+      setName("");              // <-- reset the correct state variable
+      navigate("/organiser/events");
+    } catch (err) {
+      setError(err.message || "Something went wrong");
+    }
   };
 
   return (
@@ -29,6 +40,9 @@ const AddCategory = () => {
             required
           />
         </div>
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <button
           type="submit"
           className="bg-[#F2B33D] hover:bg-yellow-500 text-white px-5 py-2 rounded-lg w-full font-medium"

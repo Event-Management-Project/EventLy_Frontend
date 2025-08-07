@@ -1,48 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Star, StarOff, Info } from "lucide-react";
-
-const sampleReviews = [
-  {
-    id: 1,
-    customerName: "Rohan Patel",
-    email: "rohan@gmail.com",
-    event: "Tech Expo 2025",
-    organiser: "Sunbeam Tech",
-    rating: 4,
-    review: "Great event with insightful speakers!",
-    submittedAt: "2025-07-18",
-  },
-  {
-    id: 2,
-    customerName: "Sneha Joshi",
-    email: "sneha.j@gmail.com",
-    event: "Startup Pitch Fest",
-    organiser: "Startup India",
-    rating: 5,
-    review: "Very well organized and professional.",
-    submittedAt: "2025-07-17",
-  },
-  {
-    id: 3,
-    customerName: "Nikhil Mehta",
-    email: "nikhilm@example.com",
-    event: "AI Summit",
-    organiser: "AI World",
-    rating: 3,
-    review: "Good sessions, but could improve catering.",
-    submittedAt: "2025-07-15",
-  },
-  {
-    id: 4,
-    customerName: "Anjali Shah",
-    email: "anjali@gmail.com",
-    event: "Tech Expo 2025",
-    organiser: "Sunbeam Tech",
-    rating: 5,
-    review: "Amazing event and management!",
-    submittedAt: "2025-07-16",
-  },
-];
+import { fetchCustomerReviews } from "../../services/EventService";
+import { useSelector } from "react-redux";
 
 const renderStars = (rating) => {
   return (
@@ -59,13 +18,43 @@ const renderStars = (rating) => {
 };
 
 function OrganiserReviews() {
+  const organiser = useSelector((state) => state.organiser.organiser);
+  const [reviews, setReviews] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const filtered = sampleReviews.filter(
+  const getReviews = async () => {
+  try {
+    const result = await fetchCustomerReviews(organiser.orgId);
+    
+    const normalized = result.map((r, i) => ({
+      id: i + 1,
+      customerName: r.customerName,
+      email: r.email || "N/A",
+      event: r.eventTitle || "N/A",
+      review: r.description || "",
+      rating: r.star || 0,
+      submittedAt: r.submittedAt || "—",
+    }));
+
+    setReviews(normalized);
+  } catch (err) {
+    console.error("Error loading reviews:", err);
+  }
+};
+
+
+  useEffect(() => {
+    if (organiser?.orgId) {
+      getReviews();
+    }
+  }, [organiser]);
+
+  const filtered = reviews.filter(
     (r) =>
-      r.event.toLowerCase().includes(search.toLowerCase()) ||
-      r.organiser.toLowerCase().includes(search.toLowerCase())
+      r.event?.toLowerCase().includes(search.toLowerCase()) ||
+r.customerName?.toLowerCase().includes(search.toLowerCase())
+
   );
 
   const ratingCounts = [5, 4, 3, 2, 1].map((star) => ({

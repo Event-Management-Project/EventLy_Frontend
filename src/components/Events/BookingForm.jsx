@@ -15,7 +15,7 @@ function BookingFormPage() {
 
   console.log(eventName, pricePerTicket);
 
-  const customerId = useSelector((state) => state.customer.customer?.id);
+  const customerId = useSelector((state) => state.customer.customer.cstId);
   console.log(customerId)
 
   const handleBook = async () => {

@@ -4,8 +4,13 @@ import { config } from "./Config"
 export const registerOrganiser = async (OrganiserData) => {
     try {
         const response = await axios.post(
-            `${config.userServiceUrl}/organiser/register`,
-            OrganiserData
+            `${config.userServiceUrl}/organiser/organiser`, 
+            OrganiserData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data", 
+                },
+            }
         );
 
         return response.data;
