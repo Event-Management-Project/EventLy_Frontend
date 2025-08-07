@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 import {
   FaCalendarAlt,
   FaClock,
@@ -11,7 +13,8 @@ import {
   FaListAlt,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { getCategories } from "../../services/EventService";
+import { useSelector } from "react-redux";
+import { getCategories, createEvent } from "../../services/EventService";
 
 function AddEvent({ onEventCreated }) {
   const [form, setForm] = useState({
@@ -26,20 +29,24 @@ function AddEvent({ onEventCreated }) {
     image: null,
   });
 
-  const [category, setCategory] = useState([]);
   const navigate = useNavigate();
-
+  
+  const organiser = useSelector((state) => state.organiser.organiser);
+  
+  const [category, setCategory] = useState([]);
+  
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await getCategories();
-        setCategory(response);
-      } catch (error) {
-        console.log("Error while fetching categories:", error);
-      }
-    };
-    fetchCategory();
-  }, []);
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories();
+      setCategory(response);
+    } catch (error) {
+      console.log("Error while fetching categories:", error);
+    }
+  };
+  fetchCategory();
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -50,12 +57,39 @@ function AddEvent({ onEventCreated }) {
     }
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEvent = async () => {
     console.log("Event Created:", form);
-    if (onEventCreated) {
-      onEventCreated(101);
-    } else {
-      navigate("/organiser/events/add-facilities");
+
+    if (!form.image) {
+  alert("Please upload an image file.");
+  return;
+}
+
+    const formData = new FormData();
+    formData.append("event_title", form.evt_title);
+    formData.append("description", form.description);
+    formData.append("startDateTime", form.start_dateTime);
+    formData.append("endDateTime", form.end_dateTime);
+    formData.append("location", form.location);
+    formData.append("capacity", form.capacity);
+    formData.append("ticketPrice", form.ticket_price);
+    formData.append("categoryName", form.category);
+    formData.append("file", form.image);
+
+
+    try {
+      const res = await createEvent(formData, organiser.orgId);
+
+      console.log("Event created successfully:", res.data);
+      const newEventId = res.eventId;
+
+      if (onEventCreated) {
+        onEventCreated(res.data);
+      } else {
+        navigate("/organiser/events/add-facilities", {state: { eventId: newEventId },});
+      }
+    } catch (err) {
+      console.error("Failed to create event:", err.response?.data || err.message);
     }
   };
 
@@ -230,6 +264,7 @@ function InputField({
             name={name}
             placeholder={placeholder}
             rows="3"
+            value={value}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white shadow-sm"
             {...rest}
           />

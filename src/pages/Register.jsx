@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   FaUserAlt,
   FaEnvelope,
@@ -16,84 +17,97 @@ import { registerOrganiser } from "../services/OrganiserService";
 
 function SignUp() {
   const navigate = useNavigate();
-
   const [role, setRole] = useState("CUSTOMER");
 
-  const [commonInfo, setCommonInfo] = useState({
+  const [formData, setFormData] = useState({
     email: "",
-    phoneNumber: "",
+    phone: "",
     password: "",
-  });
-
-  const [customerInfo, setCustomerInfo] = useState({
-    customerName: "",
-    gender: "",
     address: "",
-  });
-
-  const [organiserInfo, setOrganiserInfo] = useState({
+    fullName: "",
+    gender: "",
     companyName: "",
     companyAddress: "",
-    verificationDoc: null,
+    image: null,
   });
 
-  const handleRegister = async () => {
-    if (commonInfo.email.trim().length === 0) {
-      toast.warn("Please enter email");
-    } else if (!/\S+@\S+\.\S+/.test(commonInfo.email)) {
-      toast.warn("Invalid email format");
-    } else if (commonInfo.phoneNumber.trim().length === 0) {
-      toast.warn("Please enter phone number");
-    } else if (!/^\d{10}$/.test(commonInfo.phoneNumber)) {
-      toast.warn("Phone number must be 10 digits");
-    } else if (commonInfo.password.trim().length < 6) {
-      toast.warn("Password must be at least 6 characters");
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
     } else {
-      if (role === "CUSTOMER") {
-        if (customerInfo.customerName.trim().length === 0) {
-          toast.warn("Please enter customer name");
-        } else if (customerInfo.address.trim().length === 0) {
-          toast.warn("Please enter address");
-        } else if (customerInfo.gender.trim().length === 0) {
-          toast.warn("Please select gender");
-        } else {
-          const data = {
-            ...commonInfo,
-            ...customerInfo,
-          };
+      setFormData({ ...formData, [name]: value });
+    }
+  };
 
-          try {
-            const result = await registerCustomer(data);
-            toast.success("Customer registered successfully");
-            navigate("/");
-          } catch (error) {
-            toast.error("Customer registration failed");
-            console.error(error);
-          }
-        }
-      } else if (role === "ORGANISER") {
-        if (organiserInfo.companyName.trim().length === 0) {
-          toast.warn("Please enter company name");
-        } else if (organiserInfo.companyAddress.trim().length === 0) {
-          toast.warn("Please enter company address");
-        } else if (!organiserInfo.verificationDoc) {
-          toast.warn("Please upload verification document");
-        } else {
-         const data = {
-       ...commonInfo,
-       ...organiserInfo
-        };
+  const handleRegister = async (e) => {
+    e.preventDefault();
 
+    if (!formData.email.trim()) {
+      return toast.warn("Please enter email");
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      return toast.warn("Invalid email format");
+    } else if (!formData.phone.trim() || !/^\d{10}$/.test(formData.phone)) {
+      return toast.warn("Phone number must be 10 digits");
+    } else if (formData.password.length < 6) {
+      return toast.warn("Password must be at least 6 characters");
+    }
 
-          try {
-            const result = await registerOrganiser(data);
-            toast.success("Organiser registered successfully");
-            navigate("/");
-          } catch (error) {
-            toast.error("Organiser registration failed");
-            console.error(error);
-          }
-        }
+    if (role === "CUSTOMER") {
+      if (!formData.fullName.trim()) {
+        return toast.warn("Please enter your name");
+      }
+      if (!formData.gender) {
+        return toast.warn("Please select gender");
+      }
+      if (!formData.address.trim()) {
+        return toast.warn("Please enter address");
+      }
+
+      const customerPayload = {
+        customerName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phone,
+        password: formData.password,
+        gender: formData.gender,
+        address: formData.address,
+      };
+
+      try {
+        await registerCustomer(customerPayload);
+        toast.success("Customer registered successfully!");
+        navigate("/");
+      } catch (err) {
+        toast.error("Customer registration failed.");
+        console.error(err);
+      }
+
+    } else if (role === "ORGANISER") {
+      if (!formData.companyName.trim()) {
+        return toast.warn("Please enter company name");
+      }
+      if (!formData.companyAddress.trim()) {
+        return toast.warn("Please enter company address");
+      }
+      if (!formData.image) {
+        return toast.warn("Please upload a verification document");
+      }
+
+      const organiserFormData = new FormData();
+      organiserFormData.append("organiserCompanyName", formData.companyName);
+      organiserFormData.append("phoneNumber", formData.phone);
+      organiserFormData.append("email", formData.email);
+      organiserFormData.append("password", formData.password);
+      organiserFormData.append("address", formData.companyAddress);
+      organiserFormData.append("image", formData.image);
+
+      try {
+        await registerOrganiser(organiserFormData);
+        toast.success("Organiser registered successfully!");
+        navigate("/");
+      } catch (err) {
+        toast.error("Organiser registration failed.");
+        console.error(err);
       }
     }
   };
@@ -105,7 +119,7 @@ function SignUp() {
           Register
         </h2>
 
-        <div className="space-y-4">
+        <form className="space-y-4" onSubmit={handleRegister}>
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">
               Sign up as:
@@ -134,136 +148,49 @@ function SignUp() {
             </div>
           </div>
 
-          <InputField
-            icon={<FaEnvelope />}
-            placeholder="Email"
-            type="email"
-            name="email"
-            value={commonInfo.email}
-            onChange={(e) =>
-              setCommonInfo({ ...commonInfo, [e.target.name]: e.target.value })
-            }
-          />
-
-          <InputField
-            icon={<FaPhone />}
-            placeholder="Phone (10 digits)"
-            type="text"
-            name="phoneNumber"
-            maxLength={10}
-            value={commonInfo.phoneNumber}
-            onChange={(e) =>
-              setCommonInfo({ ...commonInfo, [e.target.name]: e.target.value })
-            }
-          />
-
-          <InputField
-            icon={<FaLock />}
-            placeholder="Password"
-            type="password"
-            name="password"
-            value={commonInfo.password}
-            onChange={(e) =>
-              setCommonInfo({ ...commonInfo, [e.target.name]: e.target.value })
-            }
-          />
+          <InputField icon={<FaEnvelope />} placeholder="Email" name="email" type="email" onChange={handleChange} />
+          <InputField icon={<FaPhone />} placeholder="Phone (10 digits)" name="phone" maxLength={10} onChange={handleChange} />
+          <InputField icon={<FaLock />} placeholder="Password" name="password" type="password" onChange={handleChange} />
 
           {role === "CUSTOMER" && (
             <>
-              <InputField
-                icon={<FaUserAlt />}
-                placeholder="Full Name"
-                name="customerName"
-                value={customerInfo.customerName}
-                onChange={(e) =>
-                  setCustomerInfo({
-                    ...customerInfo,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-
-              <InputField
-                icon={<FaMapMarkedAlt />}
-                placeholder="Address"
-                name="address"
-                value={customerInfo.address}
-                onChange={(e) =>
-                  setCustomerInfo({
-                    ...customerInfo,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-
-              <select
-                name="gender"
-                value={customerInfo.gender}
-                onChange={(e) =>
-                  setCustomerInfo({ ...customerInfo, gender: e.target.value })
-                }
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-[#0D4D66] focus:ring-2 outline-none"
-              >
-                <option value="">Gender</option>
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-              </select>
+              <InputField icon={<FaUserAlt />} placeholder="Full Name" name="fullName" onChange={handleChange} />
+              <InputField icon={<FaMapMarkedAlt />} placeholder="Address" name="address" onChange={handleChange} />
+              <div className="relative">
+                <FaVenusMars className="absolute left-3 top-3.5 text-gray-400" />
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-[#0D4D66] focus:ring-2 outline-none"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                </select>
+              </div>
             </>
           )}
 
           {role === "ORGANISER" && (
             <>
-              <InputField
-                icon={<FaBuilding />}
-                placeholder="Company Name"
-                name="companyName"
-                value={organiserInfo.companyName}
-                onChange={(e) =>
-                  setOrganiserInfo({
-                    ...organiserInfo,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-
+              <InputField icon={<FaBuilding />} placeholder="Company Name" name="companyName" onChange={handleChange} />
+              <InputField icon={<FaMapMarkedAlt />} placeholder="Company Address" name="companyAddress" onChange={handleChange} />
               <label className="w-full flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-pointer hover:bg-gray-100">
                 <FaFileUpload />
-                <input
-                  type="file"
-                  name="verificationDoc"
-                  onChange={(e) =>
-                    setOrganiserInfo({
-                      ...organiserInfo,
-                      verificationDoc: e.target.files[0],
-                    })
-                  }
-                  className="hidden"
-                />
-                Upload Company Verification
+                <input type="file" name="image" className="hidden" onChange={handleChange} />
+                Upload Verification Document
               </label>
-
-              <InputField
-                icon={<FaMapMarkedAlt />}
-                placeholder="Company Address"
-                name="companyAddress"
-                value={organiserInfo.companyAddress}
-                onChange={(e) =>
-                  setOrganiserInfo({
-                    ...organiserInfo,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
             </>
           )}
 
           <button
-            onClick={handleRegister}
+            type="submit"
             className="w-full bg-[#0D4D66] hover:bg-teal-800 text-white font-semibold py-3 rounded-lg transition mt-4"
           >
             Sign Up
           </button>
-        </div>
+        </form>
 
         <div className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}

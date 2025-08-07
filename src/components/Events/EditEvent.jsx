@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { updateEvent, getCategories } from "../../services/EventService";
+
+
 import {
   FaCalendarAlt,
   FaClock,
@@ -12,42 +18,45 @@ import {
 } from "react-icons/fa";
 
 function EditEvent() {
+  const location = useLocation();
+  const event = location.state?.event;
+  const navigate = useNavigate();
+
+  const formatDateTimeForInput = (datetimeStr) => {
+    const date = new Date(datetimeStr);
+    return date.toISOString().slice(0, 16);
+  };
+
+
   const [eventData, setEventData] = useState({
-    evt_title: "",
-    description: "",
-    location: "",
-    ticket_price: "",
-    capacity: "",
-    category: "",
-    start_dateTime: "",
-    end_dateTime: "",
+    evt_title: event?.eventTitle || "",
+    description: event?.description || "",
+    location: event?.location || "",
+    ticket_price: event?.ticketPrice || "",
+    capacity: event?.capacity || "",
+    category: event?.categoryName || "",
+    start_dateTime: event?.startDateTime ? formatDateTimeForInput(event.startDateTime) : "",
+    end_dateTime: event?.endDateTime ? formatDateTimeForInput(event.endDateTime) : "",
   });
 
-  const [existingImages, setExistingImages] = useState([]);
+  const [existingImages, setExistingImages] = useState(event?.imageUrl ? [event.imageUrl] : []);
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const categories = ["Tech", "Business", "Music", "Education"];
+  const [category, setCategory] = useState([]);
 
-  useEffect(() => {
-    const mockData = {
-      evt_title: "Demo Event",
-      description: "Sample description for the event.",
-      location: "Mumbai",
-      ticket_price: "500",
-      capacity: "100",
-      category: "Music",
-      start_dateTime: "2025-10-01T18:00",
-      end_dateTime: "2025-10-01T21:00",
-      images: [
-        "https://via.placeholder.com/150",
-        "https://via.placeholder.com/150/FFB6C1",
-      ],
-    };
-    setEventData(mockData);
-    setExistingImages(mockData.images);
-  }, []);
+ useEffect(() => {
+   const fetchCategory = async () => {
+     try {
+       const response = await getCategories();
+       setCategory(response);
+     } catch (error) {
+       console.log("Error while fetching categories:", error);
+     }
+   };
+   fetchCategory();
+ }, []);
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -66,23 +75,38 @@ function EditEvent() {
     setPreviewUrls((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    const selectedCategory = category.find(
+      (cat) => cat.categoryName === eventData.category
+    );
+
+    if (!selectedCategory) {
+      toast.error("Invalid category selected.");
+      return;
+    }
 
     const formData = new FormData();
-    Object.entries(eventData).forEach(([key, value]) => {
-      formData.append(key, value);
+    formData.append("event_title", eventData.evt_title);
+    formData.append("description", eventData.description);
+    formData.append("location", eventData.location);
+    formData.append("ticketPrice", parseFloat(eventData.ticket_price));
+    formData.append("capacity", parseInt(eventData.capacity));
+    formData.append("startDateTime", eventData.start_dateTime);
+    formData.append("endDateTime", eventData.end_dateTime);
+    formData.append("categoryName", selectedCategory.categoryName);
+
+    selectedImages.forEach((img) => {
+      formData.append("files", img);
     });
 
-    selectedImages.forEach((file) => {
-      formData.append("images", file);
-    });
-
-    console.log("Submitted Event Data:", Object.fromEntries(formData.entries()));
-    alert("Event updated (simulated)!");
-    setSuccessMessage("Event updated successfully!");
-
-    setTimeout(() => setSuccessMessage(""), 4000);
+    try {
+      await updateEvent(event.id, formData);
+      toast.success("Event updated successfully!");
+      navigate("/organiser/events");
+    } catch (error) {
+      console.error("Update failed:", error);
+      toast.error("Failed to update event. Please try again.");
+    }
   };
 
   return (
@@ -98,7 +122,7 @@ function EditEvent() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-5">
           <InputField
             icon={<FaFileAlt />}
             placeholder="Event Title"
@@ -189,9 +213,9 @@ function EditEvent() {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white"
               >
                 <option value="">Select Category</option>
-                {categories.map((cat, i) => (
-                  <option key={i} value={cat}>
-                    {cat}
+                {category.map((cat, i) => (
+                  <option key={i} value={cat.categoryName}>
+                    {cat.categoryName}
                   </option>
                 ))}
               </select>
@@ -250,10 +274,13 @@ function EditEvent() {
             </div>
           )}
 
-          <button className="w-full bg-[#F2B33D] hover:bg-yellow-500 text-white font-semibold py-3 rounded-lg transition mt-2">
+          <div
+            onClick={handleSubmit}
+            className="w-full bg-[#F2B33D] hover:bg-yellow-500 text-white font-semibold py-3 rounded-lg transition mt-2 text-center cursor-pointer"
+          >
             Update Event
-          </button>
-        </form>
+          </div>
+        </div>
       </div>
     </div>
   );
