@@ -1,10 +1,11 @@
-import axios from "axios"
-import { config } from "./Config"
+import axiosInstance from "./AxiosInstance.js";
+
+import { config } from "./Config.js"
 
 
 export const createBooking = async (customerId, eventId, totalAttendee) => {
   try {
-    const response = await axios.post(
+    const response = await axiosInstance.post(
       `${config.transactionServiceUrl}/bookings/${customerId}/${eventId}`,
       {
         total_attendee: totalAttendee,
@@ -19,7 +20,7 @@ export const createBooking = async (customerId, eventId, totalAttendee) => {
 
 export const fetchBookingHistory= async (cstId)=>{
     try{
-        const response=await axios.get(`${config.transactionServiceUrl}/bookings/bookingHistory/${cstId}`)
+        const response=await axiosInstance.get(`${config.transactionServiceUrl}/bookings/bookingHistory/${cstId}`)
         return response.data
     }
     catch(error){

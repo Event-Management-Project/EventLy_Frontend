@@ -27,6 +27,7 @@ function BookingHistory() {
   const getBookingHistory = async () => {
     try {
       const result = await fetchBookingHistory(customer.cstId);
+      console.log(result);
       setBookings(result);
 
       // Now check reviews for confirmed bookings

@@ -1,11 +1,11 @@
-import axios from "axios";
-import { config } from "./Config";
+import axiosInstance from "./AxiosInstance.js";
+import { config } from "./Config.js";
 
 export const getCategories = async () => {
   try {
     // http://localhost:9090/category
 
-    const response = await axios.get(`${config.eventServiceUrl}/category`)
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/category`)
     return response.data
   } catch (error) {
     console.error(
@@ -18,7 +18,8 @@ export const getCategories = async () => {
 
 export const eventDetails = async (eventId) => {
   try {
-    const response = await axios.get(`${config.eventServiceUrl}/event/eventDetail/${eventId}`);
+    // event/eventDetail
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/event/eventDetail/${eventId}`);
     return response.data;
   } catch (error) {
     console.error("event details fetch failed:", error.response?.data || error.message);
@@ -29,7 +30,7 @@ export const eventDetails = async (eventId) => {
 
 export const getUpcomingEvents = async () => {
   try {
-    const response = await axios.get(`${config.eventServiceUrl}/event/upcomingEvent`);
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/event/upcomingEvent`);
     console.log(response.data)
     return response.data;
   } catch (error) {
@@ -41,7 +42,7 @@ export const getUpcomingEvents = async () => {
 
 export const fetchOrganiserEvents = async (orgId) => {
   try {
-    const response = await axios.get(`${config.eventServiceUrl}/event/organiserEvent/${orgId}`)
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/event/organiserEvent/${orgId}`)
     return response.data
   }
   catch (error) {
@@ -52,7 +53,8 @@ export const fetchOrganiserEvents = async (orgId) => {
 
 export const fetchEventAttendee = async (orgId) => {
   try {
-    const response = await axios.get(`${config.eventServiceUrl}/event/eventAttendee/${orgId}`)
+    // event/eventAttendee/21
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/event/eventAttendee/${orgId}`)
     return response.data;
 
   }
@@ -64,7 +66,7 @@ export const fetchEventAttendee = async (orgId) => {
 
 export const getEventInfo = async (eventId)=>{
   try{
-    const response= await axios.get(`${config.eventServiceUrl}/event/byEventId/${eventId}`)
+    const response= await axiosInstance.get(`${config.eventServiceUrl}/event/byEventId/${eventId}`)
     console.log(response)
     return response.data
   }
@@ -76,7 +78,7 @@ export const getEventInfo = async (eventId)=>{
 
 export const fetchCustomerReviews = async (orgId) => {
   try {
-    const response = await axios.get(`${config.eventServiceUrl}/event/customerReviews/${orgId}`);
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/event/customerReviews/${orgId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching customer reviews:", error);
@@ -87,7 +89,7 @@ export const fetchCustomerReviews = async (orgId) => {
 
 export const createEvent = async (formData, organiserId) => {
   try {
-    const response = await axios.post(
+    const response = await axiosInstance.post(
       `${config.eventServiceUrl}/event/addEvent`,
       formData,
       {
@@ -109,7 +111,7 @@ export const createEvent = async (formData, organiserId) => {
 
 export const updateEvent = async (eventId, formData) => {
   try {
-    const response = await axios.put(
+    const response = await axiosInstance.put(
       `${config.eventServiceUrl}/event/editEvent/${eventId}`,
       formData
     );
@@ -122,7 +124,7 @@ export const updateEvent = async (eventId, formData) => {
 
 export const addCategory = async (categoryName) => {
   try {
-    const response = await axios.post(`${config.eventServiceUrl}/category`, {
+    const response = await axiosInstance.post(`${config.eventServiceUrl}/category`, {
       categoryName: categoryName,
     });
     return response.data;
@@ -135,7 +137,7 @@ export const addCategory = async (categoryName) => {
 
 export const deleteEventById = async (id) => {
   try {
-    const response = await axios.put(`${config.eventServiceUrl}/event/deleteEvent/${id}`);
+    const response = await axiosInstance.put(`${config.eventServiceUrl}/event/deleteEvent/${id}`);
     return response.data;
   } catch (error) {
     console.error("Event deletion failed:", error.response?.data || error.message || error);

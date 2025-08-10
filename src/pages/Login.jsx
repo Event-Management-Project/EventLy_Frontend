@@ -32,8 +32,10 @@ function Login() {
           const result = await loginCustomer(data);
 
           console.log(result);
-
-          dispatch(setCustomer(result));
+         
+        localStorage.setItem("token", result.jwtToken);
+        localStorage.setItem("customer", JSON.stringify(result.customer));
+          dispatch(setCustomer(result.customer));
           toast.success("Signed In successfully");
           navigate("/customer");
         }
@@ -45,7 +47,10 @@ function Login() {
           const result = await loginOrganiser(data);
 
           console.log(result);
-          dispatch(setOrganiser(result));
+
+           localStorage.setItem("token", result.jwtToken);
+           localStorage.setItem("organiser", JSON.stringify(result.organiser));
+          dispatch(setOrganiser(result.organiser));
           toast.success("Signed In successfully");
           navigate("/organiser");
         }
