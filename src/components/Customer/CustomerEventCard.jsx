@@ -14,9 +14,9 @@ function CustomerEventCard({ event }) {
 
   return (
     <div className="bg-[#f4f1fc] rounded-3xl shadow-md p-5 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-[#e2dff3]">
-      {safeEvent.eventImage ? (
+      {safeEvent.imageUrl ? (
         <img
-          src={safeEvent.eventImage}
+          src={safeEvent.imageUrl}
           alt={safeEvent.eventTitle}
           className="w-full h-44 object-cover rounded-2xl mb-4"
         />
