@@ -1,6 +1,6 @@
 import axiosInstance from "./AxiosInstance.js";
 import axios from "axios";
-import { config } from "./Config.js"
+import { config } from "./Config"
 
 export const registerOrganiser = async (OrganiserData) => {
     try {

@@ -1,11 +1,12 @@
 import axiosInstance from "./AxiosInstance.js";
-import { config } from "./Config.js";
+import { config } from "./Config";
 
 export const getCategories = async () => {
   try {
     // http://localhost:9090/category
 
     const response = await axiosInstance.get(`${config.eventServiceUrl}/category`)
+    console.log(response.data)
     return response.data
   } catch (error) {
     console.error(

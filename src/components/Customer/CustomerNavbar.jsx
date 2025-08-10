@@ -73,12 +73,9 @@ function CustomerNavbar({ onMenuClick }) {
               className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"
             >
               <BookOpen className="w-4 h-4 text-[#6A4FB6]" />
-              <Link to={"/customer/bookings/1"}>Booking History</Link>
+              <Link to={`/customer/bookings/${customer.id}`}>Booking History</Link>
             </button>
-            <button className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm">
-              <LogOut className="w-4 h-4 text-gray-500" />
-              Logout
-            </button>
+            
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import axiosInstance from "./AxiosInstance.js";
-import { config } from "./Config.js";
+import {config} from "./Config.js"
 
 export const addReviews = async (data) => {
   const response = await axiosInstance.post(`${config.nodeService}/reviews`, data);
@@ -12,14 +12,12 @@ export const fetchReviewsByCustomer = async (customerId) => {
   return response.data;
 };
 
-// Fetch reviews by eventId — changed to POST with body
 export const fetchReviewsByEvent = async (eventId) => {
   const response = await axiosInstance.post(`${config.nodeService}/reviews/event`, { eventId });
   return response.data;
 };
 
-// NEW: Check if review already exists by customerId & eventId
 export const checkReviewExists = async (customerId, eventId) => {
   const response = await axiosInstance.post(`${config.nodeService}/reviews/check`, { customerId, eventId });
-  return response.data; // { exists: true/false, review?: {...} }
+  return response.data; 
 };

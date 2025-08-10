@@ -78,11 +78,8 @@ function Profile({ role = "customer" }) {
             phoneNumber: newProfile.phone,
             address: newProfile.address,
           };
-
-           const organiserId = organiser?.orgId || JSON.parse(localStorage.getItem("organiser"))?.orgId;// get organiser
-
-          await updateOrganiserProfile(organiserId, data);
-          dispatch(setOrganiser({ id: organiser.orgId, ...data }));
+          await updateOrganiserProfile(organiser.id, data);
+          dispatch(setOrganiser({ id: organiser.id, ...data }));
           toast.success("Organiser profile updated");
         } else {
           const data = {
@@ -91,8 +88,8 @@ function Profile({ role = "customer" }) {
             phoneNumber: newProfile.phone,
             address: newProfile.address,
           };
-          await updateCustomerProfile(customer.cstId, data);
-          dispatch(setCustomer({ id: customer.cstId, ...data }));
+          await updateCustomerProfile(customer.id, data);
+          dispatch(setCustomer({ id: customer.id, ...data }));
           toast.success("Customer profile updated");
         }
 

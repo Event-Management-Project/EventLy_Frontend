@@ -8,7 +8,7 @@ import { addReviews, checkReviewExists } from "../../services/Reviews";
 
 function BookingHistory() {
   const [bookings, setBookings] = useState([]);
-  const [reviewsExistMap, setReviewsExistMap] = useState({}); // key: evtId, value: true/false
+  const [reviewsExistMap, setReviewsExistMap] = useState({}); 
   const [selectedReview, setSelectedReview] = useState(null);
   const [review, setReview] = useState({ subject: "", description: "" });
   const [rating, setRating] = useState(0);
@@ -18,19 +18,16 @@ function BookingHistory() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (customer?.cstId) {
+    if (customer?.id) {
       getBookingHistory();
     }
   }, [customer]);
 
-  // Fetch bookings and then check reviews existence for confirmed bookings
   const getBookingHistory = async () => {
     try {
-      const result = await fetchBookingHistory(customer.cstId);
-      console.log(result);
+      const result = await fetchBookingHistory(customer.id);
       setBookings(result);
 
-      // Now check reviews for confirmed bookings
       const confirmedBookings = result.filter(
         (booking) => booking.status.toLowerCase() === "confirmed"
       );
@@ -41,7 +38,7 @@ function BookingHistory() {
       await Promise.all(
         confirmedBookings.map(async (booking) => {
           try {
-            const res = await checkReviewExists(customer.cstId, booking.evtId);
+            const res = await checkReviewExists(customer.id, booking.evtId);
             map[booking.evtId] = res.exists;
           } catch (err) {
             // On error, assume no review
@@ -77,7 +74,7 @@ function BookingHistory() {
       setLoading(true);
 
       // Double check review existence before submit
-      const checkResult = await checkReviewExists(customer.cstId, selectedReview.evtId);
+      const checkResult = await checkReviewExists(customer.id, selectedReview.evtId);
 
       if (checkResult.exists) {
         alert("You have already added a review for this event.");
@@ -86,7 +83,7 @@ function BookingHistory() {
       }
 
       const data = {
-        customerId: customer.cstId,
+        customerId: customer.id,
         eventId: selectedReview.evtId,
         subject: review.subject,
         description: review.description,

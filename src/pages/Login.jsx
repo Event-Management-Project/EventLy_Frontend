@@ -27,17 +27,20 @@ function Login() {
         if (userType == "CUSTOMER") {
           const data = {
             email,
-            password
+            password,
           };
           const result = await loginCustomer(data);
 
-          console.log(result);
-         
-        localStorage.setItem("token", result.jwtToken);
-        localStorage.setItem("customer", JSON.stringify(result.customer));
-          dispatch(setCustomer(result.customer));
-          toast.success("Signed In successfully");
+          const customerUser = {
+            ...result.customer,
+            jwtToken: result.jwtToken,
+            role: result.role,
+          };
+
+          dispatch(setCustomer(customerUser));
+          sessionStorage.setItem("customer", JSON.stringify(customerUser));
           navigate("/customer");
+          toast.success("Signed in successfully");
         }
         if (userType == "ORGANISER") {
           const data = {
@@ -45,14 +48,16 @@ function Login() {
             password,
           };
           const result = await loginOrganiser(data);
+          const organiserUser = {
+            ...result.organiser,
+            jwtToken: result.jwtToken,
+            role: result.role,
+          };
 
-          console.log(result);
-
-           localStorage.setItem("token", result.jwtToken);
-           localStorage.setItem("organiser", JSON.stringify(result.organiser));
-          dispatch(setOrganiser(result.organiser));
-          toast.success("Signed In successfully");
+          dispatch(setOrganiser(organiserUser));
+          sessionStorage.setItem("organiser", JSON.stringify(organiserUser));
           navigate("/organiser");
+          toast.success("Signed in successfully");
         }
       } catch (error) {
         toast.error("Failed to log in", error);

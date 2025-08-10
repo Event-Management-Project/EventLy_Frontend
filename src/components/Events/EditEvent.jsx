@@ -1,126 +1,116 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { updateEvent, getCategories } from "../../services/EventService";
-
-
+import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { updateEvent, getCategories } from '../../services/EventService';
 import {
   FaCalendarAlt,
   FaClock,
+  FaFileAlt,
+  FaListAlt,
+  FaFolderOpen,
   FaMapMarkedAlt,
   FaUsers,
   FaRupeeSign,
-  FaImage,
-  FaFolderOpen,
-  FaFileAlt,
-  FaListAlt,
-} from "react-icons/fa";
+  FaImage
+} from 'react-icons/fa';
 
 function EditEvent() {
   const location = useLocation();
   const event = location.state?.event;
   const navigate = useNavigate();
 
-  const formatDateTimeForInput = (datetimeStr) => {
-    const date = new Date(datetimeStr);
-    return date.toISOString().slice(0, 16);
-  };
-
+  const formatDateTimeForPicker = (datetimeStr) =>
+    datetimeStr ? new Date(datetimeStr) : null;
 
   const [eventData, setEventData] = useState({
-    evt_title: event?.eventTitle || "",
-    description: event?.description || "",
-    location: event?.location || "",
-    ticket_price: event?.ticketPrice || "",
-    capacity: event?.capacity || "",
-    category: event?.categoryName || "",
-    start_dateTime: event?.startDateTime ? formatDateTimeForInput(event.startDateTime) : "",
-    end_dateTime: event?.endDateTime ? formatDateTimeForInput(event.endDateTime) : "",
+    evt_title: event?.eventTitle || '',
+    description: event?.description || '',
+    location: event?.location || '',
+    ticket_price: event?.ticketPrice || '',
+    capacity: event?.capacity || '',
+    category: event?.categoryName || '',
+    start_dateTime: formatDateTimeForPicker(event?.startDateTime),
+    end_dateTime: formatDateTimeForPicker(event?.endDateTime),
   });
-
-  const [existingImages, setExistingImages] = useState(event?.imageUrl ? [event.imageUrl] : []);
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [previewUrls, setPreviewUrls] = useState([]);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const [category, setCategory] = useState([]);
 
- useEffect(() => {
-   const fetchCategory = async () => {
-     try {
-       const response = await getCategories();
-       setCategory(response);
-     } catch (error) {
-       console.log("Error while fetching categories:", error);
-     }
-   };
-   fetchCategory();
- }, []);
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await getCategories();
+        setCategory(resp);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, []);
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "images") {
-      const newFiles = Array.from(files);
-      const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
-      setSelectedImages((prev) => [...prev, ...newFiles]);
-      setPreviewUrls((prev) => [...prev, ...newPreviews]);
+    setEventData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleStartDateChange = (date) => {
+    if (eventData.end_dateTime && date > eventData.end_dateTime) {
+      setEventData((prev) => ({
+        ...prev,
+        start_dateTime: date,
+        end_dateTime: null,
+      }));
     } else {
-      setEventData((prev) => ({ ...prev, [name]: value }));
+      setEventData((prev) => ({
+        ...prev,
+        start_dateTime: date,
+      }));
     }
   };
 
-  const handleRemoveImage = (indexToRemove) => {
-    setSelectedImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
-    setPreviewUrls((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  const handleEndDateChange = (date) => {
+    setEventData((prev) => ({
+      ...prev,
+      end_dateTime: date,
+    }));
   };
 
   const handleSubmit = async () => {
-    const selectedCategory = category.find(
-      (cat) => cat.categoryName === eventData.category
-    );
-
-    if (!selectedCategory) {
-      toast.error("Invalid category selected.");
+    const chosenCategory = category.find((c) => c.categoryName === eventData.category);
+    if (!chosenCategory) {
+      toast.error('Invalid category selected.');
       return;
     }
 
     const formData = new FormData();
-    formData.append("event_title", eventData.evt_title);
-    formData.append("description", eventData.description);
-    formData.append("location", eventData.location);
-    formData.append("ticketPrice", parseFloat(eventData.ticket_price));
-    formData.append("capacity", parseInt(eventData.capacity));
-    formData.append("startDateTime", eventData.start_dateTime);
-    formData.append("endDateTime", eventData.end_dateTime);
-    formData.append("categoryName", selectedCategory.categoryName);
-
-    selectedImages.forEach((img) => {
-      formData.append("files", img);
-    });
+    formData.append('event_title', eventData.evt_title);
+    formData.append('description', eventData.description);
+    formData.append('location', eventData.location);
+    formData.append('ticketPrice', eventData.ticket_price);
+    formData.append('capacity', eventData.capacity);
+    formData.append('startDateTime', eventData.start_dateTime.toISOString());
+    formData.append('endDateTime', eventData.end_dateTime.toISOString());
+    formData.append('categoryName', chosenCategory.categoryName);
 
     try {
       await updateEvent(event.id, formData);
-      toast.success("Event updated successfully!");
-      navigate("/organiser/events");
-    } catch (error) {
-      console.error("Update failed:", error);
-      toast.error("Failed to update event. Please try again.");
+      toast.success('Event updated successfully!');
+      navigate('/organiser/events');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update event.');
     }
   };
 
   return (
     <div className="min-h-screen bg-[#fef8ec] flex items-center justify-center p-6">
-      <div className="max-w-4xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-8">
+      <div className="max-w-4xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-8 organiser-filters">
         <h2 className="text-3xl font-extrabold text-center mb-6 text-[#F2B33D] flex items-center justify-center gap-2">
           <FaFolderOpen /> Edit Event
         </h2>
-
-        {successMessage && (
-          <div className="mb-4 text-green-600 font-medium text-center">
-            {successMessage}
-          </div>
-        )}
 
         <div className="space-y-5">
           <InputField
@@ -128,7 +118,7 @@ function EditEvent() {
             placeholder="Event Title"
             name="evt_title"
             value={eventData.evt_title}
-            onChange={handleInputChange}
+            onChange={handleChange}
             required
           />
           <InputField
@@ -136,37 +126,29 @@ function EditEvent() {
             placeholder="Description"
             name="description"
             value={eventData.description}
-            onChange={handleInputChange}
+            onChange={handleChange}
             isTextarea
           />
 
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-1 min-w-0">
-              <label className="block mb-1 text-[#333333] font-medium">
-                Start Date & Time
-              </label>
-              <InputField
-                icon={<FaCalendarAlt />}
-                name="start_dateTime"
-                type="datetime-local"
-                value={eventData.start_dateTime}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label className="block mb-1 text-[#333333] font-medium">
-                End Date & Time
-              </label>
-              <InputField
-                icon={<FaClock />}
-                name="end_dateTime"
-                type="datetime-local"
-                value={eventData.end_dateTime}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+            <DateInput
+              label="Start Date & Time"
+              icon={<FaCalendarAlt />}
+              selected={eventData.start_dateTime}
+              onChange={handleStartDateChange}
+              startDate={eventData.start_dateTime}
+              endDate={eventData.end_dateTime}
+              minDate={new Date()}
+            />
+            <DateInput
+              label="End Date & Time"
+              icon={<FaClock />}
+              selected={eventData.end_dateTime}
+              onChange={handleEndDateChange}
+              startDate={eventData.start_dateTime}
+              endDate={eventData.end_dateTime}
+              minDate={eventData.start_dateTime || new Date()}
+            />
           </div>
 
           <InputField
@@ -174,33 +156,33 @@ function EditEvent() {
             placeholder="Location"
             name="location"
             value={eventData.location}
-            onChange={handleInputChange}
+            onChange={handleChange}
             required
           />
-          <InputField
-            icon={<FaUsers />}
-            placeholder="Capacity"
-            name="capacity"
-            type="number"
-            value={eventData.capacity}
-            onChange={handleInputChange}
-            required
-          />
-          <InputField
-            icon={<FaRupeeSign />}
-            placeholder="Ticket Price"
-            name="ticket_price"
-            type="number"
-            step="0.01"
-            value={eventData.ticket_price}
-            onChange={handleInputChange}
-            required
-          />
+          <div className="flex flex-col md:flex-row gap-6">
+            <InputField
+              icon={<FaUsers />}
+              placeholder="Capacity"
+              name="capacity"
+              type="number"
+              value={eventData.capacity}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              icon={<FaRupeeSign />}
+              placeholder="Ticket Price"
+              name="ticket_price"
+              type="number"
+              step="0.01"
+              value={eventData.ticket_price}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
           <div className="relative">
-            <label className="block mb-1 text-[#333333] font-medium">
-              Category
-            </label>
+            <label className="block mb-1 text-[#333333] font-medium">Category</label>
             <div className="relative">
               <div className="absolute left-3 top-3.5 text-gray-400">
                 <FaListAlt />
@@ -208,8 +190,8 @@ function EditEvent() {
               <select
                 name="category"
                 value={eventData.category}
+                onChange={handleChange}
                 required
-                onChange={handleInputChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white"
               >
                 <option value="">Select Category</option>
@@ -224,55 +206,9 @@ function EditEvent() {
 
           <label className="w-full flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-pointer hover:bg-gray-100">
             <FaImage />
-            <input
-              type="file"
-              name="images"
-              accept="image/*"
-              multiple
-              onChange={handleInputChange}
-              className="hidden"
-            />
+            <input type="file" name="images" accept="image/*" multiple onChange={handleChange} className="hidden" />
             Upload New Images
           </label>
-
-          {previewUrls.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-              {previewUrls.map((src, idx) => (
-                <div key={idx} className="relative group">
-                  <img
-                    src={src}
-                    alt={`Preview ${idx}`}
-                    className="w-full h-32 object-cover rounded-xl"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(idx)}
-                    className="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-xs px-2 py-0.5 rounded hidden group-hover:block"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {existingImages.length > 0 && (
-            <div>
-              <p className="font-semibold mb-2 mt-4 text-[#333333]">
-                Existing Images
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {existingImages.map((url, idx) => (
-                  <img
-                    key={idx}
-                    src={url}
-                    alt={`Event ${idx}`}
-                    className="w-full h-32 object-cover rounded-xl"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
 
           <div
             onClick={handleSubmit}
@@ -282,30 +218,79 @@ function EditEvent() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        .organiser-filters .react-datepicker {
+          border-radius: 0.75rem;
+          border: 1px solid #f2b33d;
+          box-shadow: 0 4px 6px rgba(242, 179, 61, 0.2);
+        }
+        .organiser-filters .react-datepicker__header {
+          background-color: #f2b33d;
+          border-bottom: none;
+          border-top-left-radius: 0.75rem;
+          border-top-right-radius: 0.75rem;
+        }
+        .organiser-filters .react-datepicker__current-month,
+        .organiser-filters .react-datepicker-time__header {
+          color: white;
+          font-weight: 600;
+        }
+        .organiser-filters .react-datepicker__day {
+          color: #333;
+        }
+        .organiser-filters .react-datepicker__day--selected,
+        .organiser-filters .react-datepicker__day--keyboard-selected {
+          background-color: #f2b33d !important;
+          color: white !important;
+          border-radius: 0.5rem;
+        }
+        .organiser-filters .react-datepicker__day:hover {
+          background-color: #e0a52b;
+          color: white;
+        }
+      `}</style>
     </div>
   );
 }
 
-function InputField({
-  icon,
-  placeholder,
-  name,
-  type = "text",
-  isTextarea = false,
-  value,
-  ...rest
-}) {
+function DateInput({ label, icon, selected, onChange, startDate, endDate, minDate }) {
   return (
-    <div className="relative">
+    <div className="w-full">
+      {label && <label className="block mb-1 text-[#d99904] font-medium">{label}</label>}
+      <div className="relative">
+        <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
+        <DatePicker
+          selected={selected}
+          onChange={onChange}
+          showTimeSelect
+          timeFormat="HH:mm"
+          timeIntervals={15}
+          dateFormat="MMMM d, yyyy h:mm aa"
+          startDate={startDate}
+          endDate={endDate}
+          minDate={minDate}
+          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-gray-800 shadow-sm"
+          placeholderText="Select date and time"
+        />
+      </div>
+    </div>
+  );
+}
+
+function InputField({ icon, placeholder, name, type = 'text', isTextarea = false, value, onChange, ...rest }) {
+  return (
+    <div className="relative w-full">
       {!isTextarea ? (
         <>
           <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
           <input
             type={type}
             name={name}
-            value={value}
             placeholder={placeholder}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-[#333333]"
+            value={value}
+            onChange={onChange}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-gray-800"
             {...rest}
           />
         </>
@@ -314,10 +299,11 @@ function InputField({
           <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
           <textarea
             name={name}
-            value={value}
             placeholder={placeholder}
             rows="3"
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-[#333333]"
+            value={value}
+            onChange={onChange}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-gray-800"
             {...rest}
           />
         </>

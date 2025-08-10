@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrganiserEventCard from "./OrganiserEventCard";
 import OrganiserEventFilters from "./OrganiserEventFilters";
 import { useSelector } from "react-redux";
-import { deleteEventById, fetchOrganiserEvents } from "../../services/EventService";
+import {
+  deleteEventById,
+  fetchOrganiserEvents,
+} from "../../services/EventService";
 
 function OrganiserEventList() {
   const organiser = useSelector((state) => state.organiser.organiser);
@@ -30,17 +32,18 @@ function OrganiserEventList() {
     try {
       await deleteEventById(event.id);
       toast.success("Event deleted successfully");
-      setEvents(prevEvents => prevEvents.filter(e => e.id !== event.id));
+      setEvents((prevEvents) => prevEvents.filter((e) => e.id !== event.id));
     } catch (error) {
-      console.error("Event deletion failed:", error.response?.data || error.message || error);
+      console.error(
+        "Event deletion failed:",
+        error.response?.data || error.message || error
+      );
       toast.error(
         "Event deletion failed: " +
-        (error.response?.data?.message || error.message || "Unknown error")
+          (error.response?.data?.message || error.message || "Unknown error")
       );
     }
-
   };
-
 
   useEffect(() => {
     applyFilters(filters);
@@ -48,9 +51,9 @@ function OrganiserEventList() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetchOrganiserEvents(organiser.orgId)
+      const response = await fetchOrganiserEvents(organiser.id);
       const backendEvents = response;
-      console.log(response)
+      console.log(response);
       const formattedEvents = backendEvents.map((e) => ({
         id: e.eventId,
         description: e.description,
@@ -66,7 +69,9 @@ function OrganiserEventList() {
 
       setEvents(formattedEvents);
 
-      const uniqueCategories = [...new Set(formattedEvents.map((e) => e.categoryName))];
+      const uniqueCategories = [
+        ...new Set(formattedEvents.map((e) => e.categoryName)),
+      ];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error("Failed to fetch events:", error);
@@ -133,7 +138,6 @@ function OrganiserEventList() {
         ) : (
           <p className="text-gray-600">No events found for selected filters.</p>
         )}
-
       </div>
     </div>
   );

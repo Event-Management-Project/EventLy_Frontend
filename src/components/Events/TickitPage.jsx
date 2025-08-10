@@ -112,7 +112,7 @@ const TicketPage = () => {
           <img src="/fav-icon.png" alt="Logo" className="w-16 h-16 mb-4" />
           <QRCodeCanvas value={eventId} size={110} />
           <p className="mt-3 text-xs text-gray-700 font-medium">
-            {event.orgId}
+            {event.id}
           </p>
           <button
             onClick={handleScan}

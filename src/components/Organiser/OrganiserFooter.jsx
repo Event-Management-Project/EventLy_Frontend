@@ -84,28 +84,12 @@ function OrganiserFooter() {
 
           <div>
             <h4 className="text-lg font-semibold mb-3">Connect</h4>
-            <div className="flex space-x-4 mb-4 text-lg text-[#333333]">
-              <a href="#" className="hover:text-[#F2B33D] transition">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="hover:text-[#F2B33D] transition">
-                <FaTwitter />
-              </a>
-              <a href="#" className="hover:text-[#F2B33D] transition">
-                <FaInstagram />
-              </a>
-              <a href="#" className="hover:text-[#F2B33D] transition">
-                <FaLinkedinIn />
-              </a>
-              <a href="#" className="hover:text-[#F2B33D] transition">
-                <FaYoutube />
-              </a>
-            </div>
-            <ul className="space-y-2 text-sm">
+
+            <ul className="space-y-2 text-sm mb-6">
               <li>
                 <button
                   onClick={() => setModalType("terms")}
-                  className="hover:text-[#F2B33D]"
+                  className="hover:text-[#F2B33D] transition-colors duration-200"
                 >
                   Terms & Conditions
                 </button>
@@ -113,7 +97,7 @@ function OrganiserFooter() {
               <li>
                 <button
                   onClick={() => setModalType("privacy")}
-                  className="hover:text-[#F2B33D]"
+                  className="hover:text-[#F2B33D] transition-colors duration-200"
                 >
                   Privacy Policy
                 </button>
@@ -121,12 +105,55 @@ function OrganiserFooter() {
               <li>
                 <button
                   onClick={() => setModalType("refund")}
-                  className="hover:text-[#F2B33D]"
+                  className="hover:text-[#F2B33D] transition-colors duration-200"
                 >
                   Refund & Cancellation
                 </button>
               </li>
             </ul>
+
+            <div className="flex items-center space-x-4 text-xl text-[#2e2e2e]">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F2B33D] transition-colors duration-200"
+              >
+                <FaFacebookF />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F2B33D] transition-colors duration-200"
+              >
+                <FaTwitter />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F2B33D] transition-colors duration-200"
+              >
+                <FaInstagram />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F2B33D] transition-colors duration-200"
+              >
+                <FaLinkedinIn />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F2B33D] transition-colors duration-200"
+              >
+                <FaYoutube />
+              </a>
+            </div>
           </div>
         </div>
 

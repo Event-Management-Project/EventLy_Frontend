@@ -25,7 +25,7 @@ function OrganiserReviews() {
 
   const getReviews = async () => {
   try {
-    const result = await fetchCustomerReviews(organiser.orgId);
+    const result = await fetchCustomerReviews(organiser.id);
     
     const normalized = result.map((r, i) => ({
       id: i + 1,
@@ -45,7 +45,7 @@ function OrganiserReviews() {
 
 
   useEffect(() => {
-    if (organiser?.orgId) {
+    if (organiser?.id) {
       getReviews();
     }
   }, [organiser]);

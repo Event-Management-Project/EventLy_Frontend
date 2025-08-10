@@ -11,10 +11,11 @@ import { Link } from "react-router-dom";
 import TermsModal from "../../pages/TermsModal";
 import PrivacyPolicyModal from "../../pages/PrivacyPolicyModal";
 import RefundPolicyModal from "../../pages/RefundPolicyModal";
+import { useSelector } from "react-redux";
 
 function CustomerFooter() {
   const [modalType, setModalType] = useState(null);
-
+  const customer = useSelector((state) => state.customer.customer);
   const closeModal = () => setModalType(null);
 
   return (
@@ -47,17 +48,14 @@ function CustomerFooter() {
               </li>
               <li>
                 <Link
-                  to={"/customer/bookings/1"}
+                  to={`/customer/bookings/${customer.id}`}
                   className="hover:text-[#6A4FB6]"
                 >
                   My Bookings
                 </Link>
               </li>
               <li>
-                <Link
-                  to={"/customer/contact"}
-                  className="hover:text-[#6A4FB6]"
-                >
+                <Link to={"/customer/contact"} className="hover:text-[#6A4FB6]">
                   Contact Us
                 </Link>
               </li>
@@ -81,28 +79,12 @@ function CustomerFooter() {
 
           <div>
             <h4 className="text-lg font-semibold mb-3">Connect</h4>
-            <div className="flex space-x-4 mb-4 text-lg text-[#2e2e2e]">
-              <span className="hover:text-[#6A4FB6] cursor-pointer">
-                <FaFacebookF />
-              </span>
-              <span className="hover:text-[#6A4FB6] cursor-pointer">
-                <FaTwitter />
-              </span>
-              <span className="hover:text-[#6A4FB6] cursor-pointer">
-                <FaInstagram />
-              </span>
-              <span className="hover:text-[#6A4FB6] cursor-pointer">
-                <FaLinkedinIn />
-              </span>
-              <span className="hover:text-[#6A4FB6] cursor-pointer">
-                <FaYoutube />
-              </span>
-            </div>
-            <ul className="space-y-2 text-sm">
+
+            <ul className="space-y-2 text-sm mb-6">
               <li>
                 <button
                   onClick={() => setModalType("terms")}
-                  className="hover:text-[#6A4FB6]"
+                  className="hover:text-[#6A4FB6] transition-colors duration-200"
                 >
                   Terms & Conditions
                 </button>
@@ -110,7 +92,7 @@ function CustomerFooter() {
               <li>
                 <button
                   onClick={() => setModalType("privacy")}
-                  className="hover:text-[#6A4FB6]"
+                  className="hover:text-[#6A4FB6] transition-colors duration-200"
                 >
                   Privacy Policy
                 </button>
@@ -118,12 +100,56 @@ function CustomerFooter() {
               <li>
                 <button
                   onClick={() => setModalType("refund")}
-                  className="hover:text-[#6A4FB6]"
+                  className="hover:text-[#6A4FB6] transition-colors duration-200"
                 >
                   Refund & Cancellation
                 </button>
               </li>
             </ul>
+
+            {/* Social media icons */}
+            <div className="flex items-center space-x-4 text-xl text-[#2e2e2e]">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#6A4FB6] transition-colors duration-200"
+              >
+                <FaFacebookF />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#6A4FB6] transition-colors duration-200"
+              >
+                <FaTwitter />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#6A4FB6] transition-colors duration-200"
+              >
+                <FaInstagram />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#6A4FB6] transition-colors duration-200"
+              >
+                <FaLinkedinIn />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#6A4FB6] transition-colors duration-200"
+              >
+                <FaYoutube />
+              </a>
+            </div>
           </div>
         </div>
 

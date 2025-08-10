@@ -21,7 +21,7 @@ function CustomerSidebar({ onLinkClick, isMobile = false, isBottom = false }) {
 
   const bottomNavItems = [
     { to: "/customer/profile", label: "Profile", icon: <FiUser /> },
-    { to: "/", label: "Logout", icon: <FiLogOut />, className: "text-red-500" },
+    { to: "/login", label: "Logout", icon: <FiLogOut />, className: "text-red-500" },
   ];
 
   const renderLink = (item) => {

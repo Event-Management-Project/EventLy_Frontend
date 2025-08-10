@@ -1,6 +1,6 @@
 import axiosInstance from "./AxiosInstance.js";
 
-import { config } from "./Config.js"
+import { config } from "./Config"
 
 
 export const createBooking = async (customerId, eventId, totalAttendee) => {
@@ -18,13 +18,13 @@ export const createBooking = async (customerId, eventId, totalAttendee) => {
   }
 };
 
-export const fetchBookingHistory= async (cstId)=>{
-    try{
-        const response=await axiosInstance.get(`${config.transactionServiceUrl}/bookings/bookingHistory/${cstId}`)
-        return response.data
-    }
-    catch(error){
-        console.log("error in fecthing booking history", error)
-        throw error
-    }
+export const fetchBookingHistory = async (cstId) => {
+  try {
+    const response = await axiosInstance.get(`${config.transactionServiceUrl}/bookings/bookingHistory/${cstId}`)
+    return response.data
+  }
+  catch (error) {
+    console.log("error in fecthing booking history", error)
+    throw error
+  }
 } 
