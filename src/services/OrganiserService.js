@@ -63,3 +63,33 @@ export const changeOrganiserPassword = async (id, currentPassword, newPassword, 
     throw error;
   }
 };
+
+export const fetchDashboardData = async (organiserId) => {
+  try {
+    const response = await axios.get(`${config.eventServiceUrl}/event/dashboard/${organiserId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const fetchMonthlyEvents = async (organiserId) => {
+  try {
+    const response = await axios.get(`${config.eventServiceUrl}/event/monthly-events/${organiserId}`);
+    return response.data; // expected: { "January": 4, "February": 6, ... }
+  } catch (error) {
+    console.error('Error fetching monthly events:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const fetchMonthlyRevenue = async (organiserId) => {
+  try {
+    const response = await axios.get(`${config.eventServiceUrl}/event/monthly-revenue/${organiserId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching monthly revenue:', error.response?.data || error.message);
+    throw error;
+  }
+};
