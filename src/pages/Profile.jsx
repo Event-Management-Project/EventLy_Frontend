@@ -38,6 +38,7 @@ function Profile({ role = "customer" }) {
 
   useEffect(() => {
     if (userData) {
+        console.log("userData in Profile:", userData);
       setProfile({
         name: isOrganiser
           ? userData.organiserCompanyName || ""
@@ -77,7 +78,10 @@ function Profile({ role = "customer" }) {
             phoneNumber: newProfile.phone,
             address: newProfile.address,
           };
-          await updateOrganiserProfile(organiser.orgId, data);
+
+           const organiserId = organiser?.orgId || JSON.parse(localStorage.getItem("organiser"))?.orgId;// get organiser
+
+          await updateOrganiserProfile(organiserId, data);
           dispatch(setOrganiser({ id: organiser.orgId, ...data }));
           toast.success("Organiser profile updated");
         } else {
@@ -117,17 +121,20 @@ function Profile({ role = "customer" }) {
       return;
     }
 
+
     try {
       if (isOrganiser) {
+        const organiserId = organiser?.orgId || JSON.parse(localStorage.getItem("organiser"))?.orgId;
         await changeOrganiserPassword(
-          organiser.id,
+          // organiser.orgId,
+          organiserId,
           password.current,
           password.new,
           password.confirm
         );
       } else {
         await changeCustomerPassword(
-          customer.id,
+          customer.cstId,
           password.current,
           password.new,
           password.confirm

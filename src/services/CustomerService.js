@@ -1,10 +1,11 @@
-import axios from "axios"
-import { config } from "./Config"
+import axiosInstance from "./AxiosInstance.js";
+import axios from "axios";
+import { config } from "./Config.js"
 
 export const registerCustomer = async (customerData) => {
   try {
     const response = await axios.post(
-      `${config.userServiceUrl}/customer/register`,
+      `${config.userServiceUrl}/users/register/customer`,
       customerData
     );
 
@@ -18,9 +19,13 @@ export const registerCustomer = async (customerData) => {
 export const loginCustomer = async (loginData) => {
   try {
     const response = await axios.post(
-      `${config.userServiceUrl}/customer/login`,
+      `${config.userServiceUrl}/users/login/customer`,
       loginData
     );
+      if (response.data.jwtToken) {
+      localStorage.setItem("token", response.data.jwtToken);
+    }
+
     return response.data;
   } catch (error) {
     console.error("Login failed:", error.response?.data || error.message);
@@ -30,7 +35,7 @@ export const loginCustomer = async (loginData) => {
 
 export const updateCustomerProfile = async (id, profile) => {
   try {
-    const response = await axios.put(`${config.userServiceUrl}/customer/update/${id}`, profile)
+    const response = await axiosInstance.put(`${config.userServiceUrl}/customer/update/${id}`, profile)
     return response.data
   }
   catch (error) {
@@ -39,10 +44,10 @@ export const updateCustomerProfile = async (id, profile) => {
   }
 }
 
-export const changeCustomerPassword = async (id, currentPassword, newPassword, confirmPassword) => {
+export const changeCustomerPassword = async (cstId, currentPassword, newPassword, confirmPassword) => {
   try {
-    const response = await axios.put(
-      `${config.userServiceUrl}/customer/changePassword/${id}`,
+    const response = await axiosInstance.put(
+      `${config.userServiceUrl}/customer/changePassword/${cstId}`,
       {
         currentPassword,
         newPassword,
@@ -55,3 +60,4 @@ export const changeCustomerPassword = async (id, currentPassword, newPassword, c
     throw error;
   }
 };
+
