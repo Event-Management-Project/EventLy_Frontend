@@ -6,22 +6,25 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const customer = useSelector((state) => state.customer.customer);
   const organiser = useSelector((state) => state.organiser.organiser);
 
-  const sessionCustomer =
-    customer || JSON.parse(sessionStorage.getItem("customer"));
-  const sessionOrganiser =
-    organiser || JSON.parse(sessionStorage.getItem("organiser"));
+  const sessionCustomer = customer || JSON.parse(sessionStorage.getItem("customer"));
+  const sessionOrganiser = organiser || JSON.parse(sessionStorage.getItem("organiser"));
 
-  const user = sessionCustomer || sessionOrganiser;
+  let user = null;
+
+  if (allowedRoles.includes("ROLE_CUSTOMER") && sessionCustomer) {
+    user = sessionCustomer;
+  } else if (allowedRoles.includes("ROLE_ORGANISER") && sessionOrganiser) {
+    user = sessionOrganiser;
+  }
 
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  const userRole = user.role;
 
-  if (!allowedRoles.includes(userRole)) {
-    return <Navigate to="/" />;
-  }
+if (!allowedRoles.includes(user.role?.toUpperCase())) {
+  return <Navigate to="/" />;
+}
 
   return <Outlet />;
 };

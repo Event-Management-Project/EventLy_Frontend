@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 
 import {
   FaCalendarAlt,
@@ -21,8 +20,8 @@ function AddEvent({ onEventCreated }) {
   const [form, setForm] = useState({
     evt_title: "",
     description: "",
-    start_dateTime: null,
-    end_dateTime: null,
+    start_dateTime: "",
+    end_dateTime: "",
     location: "",
     capacity: "",
     ticket_price: "",
@@ -31,24 +30,26 @@ function AddEvent({ onEventCreated }) {
   });
 
   const navigate = useNavigate();
+  
   const organiser = useSelector((state) => state.organiser.organiser);
+  
   const [category, setCategory] = useState([]);
-
+  
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await getCategories();
-        setCategory(response);
-      } catch (error) {
-        console.log("Error while fetching categories:", error);
-      }
-    };
-    fetchCategory();
-  }, []);
+  const fetchCategory = async () => {
+    try {
+      const response = await getCategories();
+      setCategory(response);
+    } catch (error) {
+      console.log("Error while fetching categories:", error);
+    }
+  };
+  fetchCategory();
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (name === "image") {
       setForm({ ...form, image: files[0] });
     } else {
@@ -56,52 +57,39 @@ function AddEvent({ onEventCreated }) {
     }
   };
 
-  // Date change handlers
-  const handleStartDateChange = (date) => {
-    // If start is after end, reset end
-    if (form.end_dateTime && date > form.end_dateTime) {
-      setForm({ ...form, start_dateTime: date, end_dateTime: null });
-    } else {
-      setForm({ ...form, start_dateTime: date });
-    }
-  };
-
-  const handleEndDateChange = (date) => {
-    setForm({ ...form, end_dateTime: date });
-  };
-
   const handleCreateEvent = async () => {
-    if (!form.image) {
-      alert("Please upload an image file.");
-      return;
-    }
+    console.log("Event Created:", form);
 
-    // Prepare form data
+    if (!form.image) {
+  alert("Please upload an image file.");
+  return;
+}
+
     const formData = new FormData();
     formData.append("event_title", form.evt_title);
     formData.append("description", form.description);
-    formData.append("startDateTime", form.start_dateTime.toISOString());
-    formData.append("endDateTime", form.end_dateTime.toISOString());
+    formData.append("startDateTime", form.start_dateTime);
+    formData.append("endDateTime", form.end_dateTime);
     formData.append("location", form.location);
     formData.append("capacity", form.capacity);
     formData.append("ticketPrice", form.ticket_price);
     formData.append("categoryName", form.category);
     formData.append("file", form.image);
 
+
     try {
-      const res = await createEvent(formData, organiser.id);
+      const res = await createEvent(formData, organiser.orgId);
+
+      console.log("Event created successfully:", res.data);
+      const newEventId = res.eventId;
+
       if (onEventCreated) {
         onEventCreated(res.data);
       } else {
-        navigate("/organiser/events/add-facilities", {
-          state: { eventId: res.data.eventId },
-        });
+        navigate("/organiser/events/add-facilities", {state: { eventId: newEventId },});
       }
     } catch (err) {
-      console.error(
-        "Failed to create event:",
-        err.response?.data || err.message
-      );
+      console.error("Failed to create event:", err.response?.data || err.message);
     }
   };
 
@@ -130,27 +118,24 @@ function AddEvent({ onEventCreated }) {
             value={form.description}
           />
 
-          <div className="flex flex-col md:flex-row gap-6 organiser-filters">
-            <DateInput
-              label="Start Date & Time"
+          <div className="flex flex-col md:flex-row gap-6">
+            <InputField
               icon={<FaCalendarAlt />}
-              selected={form.start_dateTime}
-              onChange={handleStartDateChange}
-              selectsStart
-              startDate={form.start_dateTime}
-              endDate={form.end_dateTime}
-              minDate={new Date()}
+              name="start_dateTime"
+              type="datetime-local"
+              label="Start Date & Time"
+              required
+              onChange={handleChange}
+              value={form.start_dateTime}
             />
-
-            <DateInput
-              label="End Date & Time"
+            <InputField
               icon={<FaClock />}
-              selected={form.end_dateTime}
-              onChange={handleEndDateChange}
-              selectsEnd
-              startDate={form.start_dateTime}
-              endDate={form.end_dateTime}
-              minDate={form.start_dateTime || new Date()}
+              name="end_dateTime"
+              type="datetime-local"
+              label="End Date & Time"
+              required
+              onChange={handleChange}
+              value={form.end_dateTime}
             />
           </div>
 
@@ -228,76 +213,6 @@ function AddEvent({ onEventCreated }) {
             Create Event
           </div>
         </div>
-
-        <style>{`
-          .organiser-filters .react-datepicker {
-            border-radius: 0.75rem;
-            border: 1px solid #f2b33d;
-            box-shadow: 0 4px 6px rgba(242, 179, 61, 0.2);
-          }
-          .organiser-filters .react-datepicker__header {
-            background-color: #f2b33d;
-            border-bottom: none;
-            border-top-left-radius: 0.75rem;
-            border-top-right-radius: 0.75rem;
-          }
-          .organiser-filters .react-datepicker__current-month,
-          .organiser-filters .react-datepicker-time__header {
-            color: white;
-            font-weight: 600;
-          }
-          .organiser-filters .react-datepicker__day {
-            color: #333;
-          }
-          .organiser-filters .react-datepicker__day--selected,
-          .organiser-filters .react-datepicker__day--keyboard-selected {
-            background-color: #f2b33d !important;
-            color: white !important;
-            border-radius: 0.5rem;
-          }
-          .organiser-filters .react-datepicker__day:hover {
-            background-color: #e0a52b;
-            color: white;
-          }
-        `}</style>
-      </div>
-    </div>
-  );
-}
-
-function DateInput({
-  label,
-  icon,
-  selected,
-  onChange,
-  selectsStart,
-  selectsEnd,
-  startDate,
-  endDate,
-  minDate,
-}) {
-  return (
-    <div className="w-full">
-      {label && (
-        <label className="block mb-1 text-[#d99904] font-medium">{label}</label>
-      )}
-      <div className="relative">
-        <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
-        <DatePicker
-          selected={selected}
-          onChange={onChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          dateFormat="MMMM d, yyyy h:mm aa"
-          selectsStart={selectsStart}
-          selectsEnd={selectsEnd}
-          startDate={startDate}
-          endDate={endDate}
-          minDate={minDate}
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-gray-800 shadow-sm"
-          placeholderText="Select date and time"
-        />
       </div>
     </div>
   );
@@ -309,39 +224,52 @@ function InputField({
   name,
   type = "text",
   isTextarea = false,
+  label,
   value,
-  onChange,
   ...rest
 }) {
+  const isDateTime =
+    type === "datetime-local" && (name === "start_dateTime" || name === "end_dateTime");
+
+  const hasValue = value && value !== "";
+
   return (
     <div className="relative w-full">
-      {!isTextarea ? (
-        <>
-          <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
+      {label && (
+        <label className="block mb-1 text-[#d99904] font-medium">{label}</label>
+      )}
+      <div className="relative">
+        <div
+          className={`absolute left-3 top-3.5 ${
+            hasValue ? "text-white" : "text-gray-400"
+          }`}
+        >
+          {icon}
+        </div>
+        {!isTextarea ? (
           <input
             type={type}
             name={name}
             placeholder={placeholder}
             value={value}
-            onChange={onChange}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-gray-800"
+            className={`w-full pl-10 pr-4 py-3 border rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-[#F2B33D] ${
+              isDateTime && hasValue
+                ? "bg-[#F2B33D] text-white placeholder-white focus:ring-white"
+                : "bg-white text-gray-800 border-gray-300"
+            }`}
             {...rest}
           />
-        </>
-      ) : (
-        <>
-          <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
+        ) : (
           <textarea
             name={name}
             placeholder={placeholder}
             rows="3"
             value={value}
-            onChange={onChange}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white text-gray-800"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#F2B33D] outline-none bg-white shadow-sm"
             {...rest}
           />
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

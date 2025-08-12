@@ -18,14 +18,14 @@ function BookingHistory() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (customer?.id) {
+    if (customer?.cstId) {
       getBookingHistory();
     }
   }, [customer]);
 
   const getBookingHistory = async () => {
     try {
-      const result = await fetchBookingHistory(customer.id);
+      const result = await fetchBookingHistory(customer.cstId);
       setBookings(result);
 
       const confirmedBookings = result.filter(
@@ -38,7 +38,7 @@ function BookingHistory() {
       await Promise.all(
         confirmedBookings.map(async (booking) => {
           try {
-            const res = await checkReviewExists(customer.id, booking.evtId);
+            const res = await checkReviewExists(customer.cstId, booking.evtId);
             map[booking.evtId] = res.exists;
           } catch (err) {
             // On error, assume no review
@@ -74,7 +74,7 @@ function BookingHistory() {
       setLoading(true);
 
       // Double check review existence before submit
-      const checkResult = await checkReviewExists(customer.id, selectedReview.evtId);
+      const checkResult = await checkReviewExists(customer.cstId, selectedReview.evtId);
 
       if (checkResult.exists) {
         alert("You have already added a review for this event.");
@@ -83,7 +83,7 @@ function BookingHistory() {
       }
 
       const data = {
-        customerId: customer.id,
+        customerId: customer.cstId,
         eventId: selectedReview.evtId,
         subject: review.subject,
         description: review.description,

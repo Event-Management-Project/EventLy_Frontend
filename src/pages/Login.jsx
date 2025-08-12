@@ -31,6 +31,8 @@ function Login() {
           };
           const result = await loginCustomer(data);
 
+          sessionStorage.removeItem("organiser");
+
           const customerUser = {
             ...result.customer,
             jwtToken: result.jwtToken,
@@ -48,12 +50,13 @@ function Login() {
             password,
           };
           const result = await loginOrganiser(data);
+          console.log(result)
           const organiserUser = {
             ...result.organiser,
             jwtToken: result.jwtToken,
             role: result.role,
           };
-
+          sessionStorage.removeItem("customer");
           dispatch(setOrganiser(organiserUser));
           sessionStorage.setItem("organiser", JSON.stringify(organiserUser));
           navigate("/organiser");
