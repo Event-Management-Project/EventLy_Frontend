@@ -16,11 +16,38 @@ import { setCustomer } from "../redux/slices/CustomerSlice";
 
 function Profile({ role = "customer" }) {
   const dispatch = useDispatch();
-  const customer = useSelector((state) => state.customer.customer);
-  const organiser = useSelector((state) => state.organiser.organiser);
-  const userData = role === "organiser" ? organiser : customer;
+  const customerFromRedux = useSelector((state) => state.customer.customer);
+  const organiserFromRedux = useSelector((state) => state.organiser.organiser);
 
   const isOrganiser = role === "organiser";
+  const storageKey = isOrganiser ? "organiser" : "customer";
+
+  // Fallback to sessionStorage if Redux is empty, and sync to Redux
+  let userData = isOrganiser ? organiserFromRedux : customerFromRedux;
+  if (!userData) {
+    const stored = sessionStorage.getItem(storageKey);
+    if (stored) {
+      try {
+        userData = JSON.parse(stored);
+        if (isOrganiser) {
+          dispatch(setOrganiser(userData));
+        } else {
+          dispatch(setCustomer(userData));
+        }
+      } catch (error) {
+        console.error("Failed to parse sessionStorage:", error);
+        toast.error("Session data is corrupted. Please log in again.");
+      }
+    }
+  }
+
+  // If still no userData (e.g., invalid session), handle gracefully (though ProtectedRoute should prevent this)
+  if (!userData) {
+    toast.error("User data not found. Redirecting to login...");
+    // Optionally: <Navigate to="/login" /> if using react-router in this component
+    return null; // Or a loading/error UI
+  }
+
   const theme = {
     background: isOrganiser ? "#FFF7D1" : "#EFEAFF",
     primary: isOrganiser ? "#F29F05" : "#6A4FB6",
@@ -37,17 +64,14 @@ function Profile({ role = "customer" }) {
   });
 
   useEffect(() => {
-    if (userData) {
-        console.log("userData in Profile:", userData);
-      setProfile({
-        name: isOrganiser
-          ? userData.organiserCompanyName || ""
-          : userData.customerName || "",
-        email: userData.email || "",
-        phone: userData.phoneNumber || "",
-        address: userData.address || "",
-      });
-    }
+    setProfile({
+      name: isOrganiser
+        ? userData.organiserCompanyName || ""
+        : userData.customerName || "",
+      email: userData.email || "",
+      phone: userData.phoneNumber || "",
+      address: userData.address || "",
+    });
   }, [userData, isOrganiser]);
 
   const [password, setPassword] = useState({
@@ -63,42 +87,46 @@ function Profile({ role = "customer" }) {
   const handleProfileUpdate = async () => {
     if (newProfile.name.trim().length === 0) {
       toast.warn("Name can't be empty");
+      return;
     } else if (newProfile.email.trim().length === 0) {
       toast.warn("Email can't be empty");
+      return;
     } else if (newProfile.address.trim().length === 0) {
       toast.warn("Address can't be empty");
-    } else if (newProfile.phone.trim().length !== 10) {
-      toast.warn("Phone number must be 10 digits");
-    } else {
-      try {
-        if (isOrganiser) {
-          const data = {
-            organiserCompanyName: newProfile.name,
-            email: newProfile.email,
-            phoneNumber: newProfile.phone,
-            address: newProfile.address,
-          };
-          await updateOrganiserProfile(organiser.id, data);
-          dispatch(setOrganiser({ id: organiser.id, ...data }));
-          toast.success("Organiser profile updated");
-        } else {
-          const data = {
-            customerName: newProfile.name,
-            email: newProfile.email,
-            phoneNumber: newProfile.phone,
-            address: newProfile.address,
-          };
-          await updateCustomerProfile(customer.id, data);
-          dispatch(setCustomer({ id: customer.id, ...data }));
-          toast.success("Customer profile updated");
-        }
+      return;
+    } else if (!/^\d{10}$/.test(newProfile.phone)) {
+      toast.warn("Phone number must be exactly 10 digits and numeric");
+      return;
+    }
 
-        setProfile(newProfile);
-        setShowProfileForm(false);
-      } catch (error) {
-        toast.error("Failed to update profile");
-        console.error(error);
+    try {
+      const id = isOrganiser ? userData.orgId : userData.cstId;
+      const data = {
+        ...(isOrganiser
+          ? { organiserCompanyName: newProfile.name }
+          : { customerName: newProfile.name }),
+        email: newProfile.email,
+        phoneNumber: newProfile.phone,
+        address: newProfile.address,
+      };
+
+      if (isOrganiser) {
+        await updateOrganiserProfile(id, data);
+        const updatedUser = { ...userData, ...data };
+        dispatch(setOrganiser(updatedUser));
+        toast.success("Organiser profile updated");
+      } else {
+        await updateCustomerProfile(id, data);
+        const updatedUser = { ...userData, ...data };
+        dispatch(setCustomer(updatedUser));
+        toast.success("Customer profile updated");
       }
+
+      setProfile(newProfile);
+      setShowProfileForm(false);
+    } catch (error) {
+      toast.error("Failed to update profile");
+      console.error(error);
     }
   };
 
@@ -118,20 +146,19 @@ function Profile({ role = "customer" }) {
       return;
     }
 
-
     try {
+      const id = isOrganiser ? userData.orgId : userData.cstId;
+
       if (isOrganiser) {
-        const organiserId = organiser?.orgId || JSON.parse(localStorage.getItem("organiser"))?.orgId;
         await changeOrganiserPassword(
-          // organiser.orgId,
-          organiserId,
+          id,
           password.current,
           password.new,
           password.confirm
         );
       } else {
         await changeCustomerPassword(
-          customer.cstId,
+          id,
           password.current,
           password.new,
           password.confirm
@@ -232,7 +259,7 @@ function Profile({ role = "customer" }) {
               style={{ borderColor: theme.primary }}
             />
             <input
-              type="text"
+              type="tel"  // Changed to tel for better mobile input
               name="phone"
               value={newProfile.phone}
               onChange={(e) =>
