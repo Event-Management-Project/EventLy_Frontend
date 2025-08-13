@@ -27,12 +27,12 @@ const Notifications = () => {
 
         if (cstId) {
           const data = await getCustomerNotifications(cstId);
-          setNotifications(data.filter((n) => !n.read));
+          setNotifications(data.filter((n) => !n.isRead));
         } 
 
         else if (orgId) {
           const data = await getOrganiserNotifications(orgId);
-          setNotifications(data.filter((n) => !n.read));
+          setNotifications(data.filter((n) => !n.isRead));
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);

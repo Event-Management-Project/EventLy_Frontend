@@ -51,7 +51,7 @@ function OrganiserEventList() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetchOrganiserEvents(organiser.id);
+      const response = await fetchOrganiserEvents(organiser.orgId);
       const backendEvents = response;
       console.log(response);
       const formattedEvents = backendEvents.map((e) => ({

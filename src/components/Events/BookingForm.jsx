@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { createBooking } from "../../services/BookingService";
+import { createBooking, hasCapacity } from "../../services/BookingService";
 
 function BookingFormPage() {
   const { eventId } = useParams();
@@ -22,6 +23,13 @@ function BookingFormPage() {
     const total = attendees * pricePerTicket;
 
     try {
+
+      const capacityAvailable = await hasCapacity(eventId, attendees);
+      if (!capacityAvailable) {
+        toast.error("Not enough capacity for this event!"); 
+        return;
+      }
+
       const response = await createBooking(customerId, eventId, attendees);
       console.log(response.data);
       const booking = response.data;
