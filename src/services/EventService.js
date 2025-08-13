@@ -54,7 +54,6 @@ export const fetchOrganiserEvents = async (orgId) => {
 
 export const fetchEventAttendee = async (orgId) => {
   try {
-    // event/eventAttendee/21
     const response = await axiosInstance.get(`${config.eventServiceUrl}/event/eventAttendee/${orgId}`)
     return response.data;
 
