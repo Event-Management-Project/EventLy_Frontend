@@ -24,28 +24,29 @@ function OrganiserReviews() {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const getReviews = async () => {
-  try {
-    const result = await fetchCustomerReviews(organiser.id);
-    
-    const normalized = result.map((r, i) => ({
-      id: i + 1,
-      customerName: r.customerName,
-      email: r.email || "N/A",
-      event: r.eventTitle || "N/A",
-      review: r.description || "",
-      rating: r.star || 0,
-      submittedAt: r.submittedAt || "—",
-    }));
+    try {
+      console.log(organiser)
+      const result = await fetchCustomerReviews(organiser.orgId);
+      console.log(result);
 
-    setReviews(normalized);
-  } catch (err) {
-    console.error("Error loading reviews:", err);
-  }
-};
+      const normalized = result.map((r, i) => ({
+        id: i + 1,
+        customerName: r.customerName,
+        email: r.email || "N/A",
+        event: r.eventTitle || "N/A",
+        review: r.description || "",
+        rating: r.star || 0,
+        submittedAt: r.submittedAt || "—",
+      }));
 
+      setReviews(normalized);
+    } catch (err) {
+      console.error("Error loading reviews:", err);
+    }
+  };
 
   useEffect(() => {
-    if (organiser?.id) {
+    if (organiser?.orgId) {
       getReviews();
     }
   }, [organiser]);
@@ -53,8 +54,7 @@ function OrganiserReviews() {
   const filtered = reviews.filter(
     (r) =>
       r.event?.toLowerCase().includes(search.toLowerCase()) ||
-r.customerName?.toLowerCase().includes(search.toLowerCase())
-
+      r.customerName?.toLowerCase().includes(search.toLowerCase())
   );
 
   const ratingCounts = [5, 4, 3, 2, 1].map((star) => ({

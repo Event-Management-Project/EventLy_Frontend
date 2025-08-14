@@ -18,11 +18,36 @@ function Profile({ role = "customer" }) {
   const dispatch = useDispatch();
   const customerFromRedux = useSelector((state) => state.customer.customer);
   const organiserFromRedux = useSelector((state) => state.organiser.organiser);
+  const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  const [password, setPassword] = useState({
+    current: "",
+    new: "",
+    confirm: "",
+  });
+
+  const [showProfileForm, setShowProfileForm] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [newProfile, setNewProfile] = useState(profile);
+
+  useEffect(() => {
+    setProfile({
+      name: isOrganiser
+        ? userData.organiserCompanyName || ""
+        : userData.customerName || "",
+      email: userData.email || "",
+      phone: userData.phoneNumber || "",
+      address: userData.address || "",
+    });
+  }, [userData, isOrganiser]);
 
   const isOrganiser = role === "organiser";
   const storageKey = isOrganiser ? "organiser" : "customer";
 
-  // Fallback to sessionStorage if Redux is empty, and sync to Redux
   let userData = isOrganiser ? organiserFromRedux : customerFromRedux;
   if (!userData) {
     const stored = sessionStorage.getItem(storageKey);
@@ -41,11 +66,9 @@ function Profile({ role = "customer" }) {
     }
   }
 
-  // If still no userData (e.g., invalid session), handle gracefully (though ProtectedRoute should prevent this)
   if (!userData) {
     toast.error("User data not found. Redirecting to login...");
-    // Optionally: <Navigate to="/login" /> if using react-router in this component
-    return null; // Or a loading/error UI
+    return null;
   }
 
   const theme = {
@@ -55,34 +78,6 @@ function Profile({ role = "customer" }) {
     secondary: isOrganiser ? "#A64B2A" : "#0D4D66",
     secondaryHover: isOrganiser ? "#8C3E22" : "#b63c7a",
   };
-
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
-
-  useEffect(() => {
-    setProfile({
-      name: isOrganiser
-        ? userData.organiserCompanyName || ""
-        : userData.customerName || "",
-      email: userData.email || "",
-      phone: userData.phoneNumber || "",
-      address: userData.address || "",
-    });
-  }, [userData, isOrganiser]);
-
-  const [password, setPassword] = useState({
-    current: "",
-    new: "",
-    confirm: "",
-  });
-
-  const [showProfileForm, setShowProfileForm] = useState(false);
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
-  const [newProfile, setNewProfile] = useState(profile);
 
   const handleProfileUpdate = async () => {
     if (newProfile.name.trim().length === 0) {
@@ -259,7 +254,7 @@ function Profile({ role = "customer" }) {
               style={{ borderColor: theme.primary }}
             />
             <input
-              type="tel"  // Changed to tel for better mobile input
+              type="tel" // Changed to tel for better mobile input
               name="phone"
               value={newProfile.phone}
               onChange={(e) =>

@@ -73,7 +73,7 @@ function CustomerNavbar({ onMenuClick }) {
               className="w-full flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-[#F2EDFF] text-sm"
             >
               <BookOpen className="w-4 h-4 text-[#6A4FB6]" />
-              <Link to={`/customer/bookings/${customer.id}`}>Booking History</Link>
+              <Link to={`/customer/bookings/${customer.cstId}`}>Booking History</Link>
             </button>
             
           </div>

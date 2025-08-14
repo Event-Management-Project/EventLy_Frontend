@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { updateEvent, getCategories } from '../../services/EventService';
+import React, { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { updateEvent, getCategories } from "../../services/EventService";
 import {
   FaCalendarAlt,
   FaClock,
@@ -13,8 +13,8 @@ import {
   FaMapMarkedAlt,
   FaUsers,
   FaRupeeSign,
-  FaImage
-} from 'react-icons/fa';
+  FaImage,
+} from "react-icons/fa";
 
 function EditEvent() {
   const location = useLocation();
@@ -25,12 +25,12 @@ function EditEvent() {
     datetimeStr ? new Date(datetimeStr) : null;
 
   const [eventData, setEventData] = useState({
-    evt_title: event?.eventTitle || '',
-    description: event?.description || '',
-    location: event?.location || '',
-    ticket_price: event?.ticketPrice || '',
-    capacity: event?.capacity || '',
-    category: event?.categoryName || '',
+    evt_title: event?.eventTitle || "",
+    description: event?.description || "",
+    location: event?.location || "",
+    ticket_price: event?.ticketPrice || "",
+    capacity: event?.capacity || "",
+    category: event?.categoryName || "",
     start_dateTime: formatDateTimeForPicker(event?.startDateTime),
     end_dateTime: formatDateTimeForPicker(event?.endDateTime),
   });
@@ -79,29 +79,37 @@ function EditEvent() {
   };
 
   const handleSubmit = async () => {
-    const chosenCategory = category.find((c) => c.categoryName === eventData.category);
+    const chosenCategory = category.find(
+      (c) => c.categoryName === eventData.category
+    );
     if (!chosenCategory) {
-      toast.error('Invalid category selected.');
+      toast.error("Invalid category selected.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('event_title', eventData.evt_title);
-    formData.append('description', eventData.description);
-    formData.append('location', eventData.location);
-    formData.append('ticketPrice', eventData.ticket_price);
-    formData.append('capacity', eventData.capacity);
-    formData.append('startDateTime', eventData.start_dateTime.toISOString());
-    formData.append('endDateTime', eventData.end_dateTime.toISOString());
-    formData.append('categoryName', chosenCategory.categoryName);
+    formData.append("event_title", eventData.evt_title);
+    formData.append("description", eventData.description);
+    formData.append("location", eventData.location);
+    formData.append("ticketPrice", eventData.ticket_price);
+    formData.append("capacity", eventData.capacity);
+    formData.append(
+      "startDateTime",
+      eventData.start_dateTime.toISOString().slice(0, 19)
+    );
+    formData.append(
+      "endDateTime",
+      eventData.end_dateTime.toISOString().slice(0, 19)
+    );
+    formData.append("categoryName", chosenCategory.categoryName);
 
     try {
       await updateEvent(event.id, formData);
-      toast.success('Event updated successfully!');
-      navigate('/organiser/events');
+      toast.success("Event updated successfully!");
+      navigate("/organiser/events");
     } catch (err) {
       console.error(err);
-      toast.error('Failed to update event.');
+      toast.error("Failed to update event.");
     }
   };
 
@@ -182,7 +190,9 @@ function EditEvent() {
           </div>
 
           <div className="relative">
-            <label className="block mb-1 text-[#333333] font-medium">Category</label>
+            <label className="block mb-1 text-[#333333] font-medium">
+              Category
+            </label>
             <div className="relative">
               <div className="absolute left-3 top-3.5 text-gray-400">
                 <FaListAlt />
@@ -206,7 +216,14 @@ function EditEvent() {
 
           <label className="w-full flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-pointer hover:bg-gray-100">
             <FaImage />
-            <input type="file" name="images" accept="image/*" multiple onChange={handleChange} className="hidden" />
+            <input
+              type="file"
+              name="images"
+              accept="image/*"
+              multiple
+              onChange={handleChange}
+              className="hidden"
+            />
             Upload New Images
           </label>
 
@@ -254,10 +271,20 @@ function EditEvent() {
   );
 }
 
-function DateInput({ label, icon, selected, onChange, startDate, endDate, minDate }) {
+function DateInput({
+  label,
+  icon,
+  selected,
+  onChange,
+  startDate,
+  endDate,
+  minDate,
+}) {
   return (
     <div className="w-full">
-      {label && <label className="block mb-1 text-[#d99904] font-medium">{label}</label>}
+      {label && (
+        <label className="block mb-1 text-[#d99904] font-medium">{label}</label>
+      )}
       <div className="relative">
         <div className="absolute left-3 top-3.5 text-gray-400">{icon}</div>
         <DatePicker
@@ -278,7 +305,16 @@ function DateInput({ label, icon, selected, onChange, startDate, endDate, minDat
   );
 }
 
-function InputField({ icon, placeholder, name, type = 'text', isTextarea = false, value, onChange, ...rest }) {
+function InputField({
+  icon,
+  placeholder,
+  name,
+  type = "text",
+  isTextarea = false,
+  value,
+  onChange,
+  ...rest
+}) {
   return (
     <div className="relative w-full">
       {!isTextarea ? (

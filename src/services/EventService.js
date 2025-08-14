@@ -65,13 +65,13 @@ export const fetchEventAttendee = async (orgId) => {
   }
 }
 
-export const getEventInfo = async (eventId)=>{
-  try{
-    const response= await axiosInstance.get(`${config.eventServiceUrl}/event/byEventId/${eventId}`)
+export const getEventInfo = async (eventId) => {
+  try {
+    const response = await axiosInstance.get(`${config.eventServiceUrl}/event/byEventId/${eventId}`)
     console.log(response)
     return response.data
   }
-  catch(error){
+  catch (error) {
     console.log("error while fetching event details")
     throw error
   }

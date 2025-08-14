@@ -13,8 +13,8 @@ const AddCategory = () => {
     setError(null);
 
     try {
-      await addCategory(name);  // <-- pass the string directly here, NOT { name }
-      setName("");              // <-- reset the correct state variable
+      await addCategory(name);  
+      setName("");            
       navigate("/organiser/events");
     } catch (err) {
       setError(err.message || "Something went wrong");
