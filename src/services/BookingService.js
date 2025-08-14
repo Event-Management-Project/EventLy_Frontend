@@ -28,3 +28,16 @@ export const fetchBookingHistory = async (cstId) => {
     throw error
   }
 } 
+
+
+export const hasCapacity = async (eventId, attendees) => {
+  try {
+    const response = await axiosInstance.get(
+      `${config.eventServiceUrl}/event/${eventId}/has-capacity?attendees=${attendees}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to check capacity:", error);
+    throw error;
+  }
+};
