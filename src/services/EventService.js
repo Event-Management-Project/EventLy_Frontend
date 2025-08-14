@@ -144,5 +144,16 @@ export const deleteEventById = async (id) => {
   }
 };
 
-
+export const countEvent = async () => {
+  try{
+    const response = await axiosInstance.get(
+      `${config.eventServiceUrl}/event/count-event`,
+    );
+    return response.data;
+  }
+  catch(error){
+    console.log("Fetching Event count failed", error.response?.data || error.message);
+    throw error;
+  }
+}
 

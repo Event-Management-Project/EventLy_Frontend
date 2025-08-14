@@ -61,3 +61,15 @@ export const changeCustomerPassword = async (cstId, currentPassword, newPassword
   }
 };
 
+export const countCustomer = async () => {
+  try{
+    const response = await axiosInstance.get(
+      `${config.userServiceUrl}/customer/count-customer`,
+    );
+    return response.data;
+  }
+  catch(error){
+    console.log("Fetching Customer count failed", error.response?.data || error.message);
+    throw error;
+  }
+}
