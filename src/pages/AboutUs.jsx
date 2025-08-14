@@ -1,35 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import { FaLinkedin, FaEnvelope } from 'react-icons/fa';
+import { countCustomer } from '../services/CustomerService';
+import { countEvent } from '../services/EventService';
+
+
 
 const team = [
   {
     name: 'Sourabh Magdum',
-    photo: '/images/sourabh.jpg',
-    linkedin: 'https://linkedin.com/in/sourabh',
-    email: 'sourabh@example.com',
+    photo: 'https://res.cloudinary.com/di5aefoge/image/upload/v1755177386/sm_o6rmet.jpg',
+    linkedin: 'https://www.linkedin.com/in/sourabh-magadum/',
+    email: 'magdumsourabh37@gmail.com',
   },
   {
     name: 'Farhan Tamboli',
-    photo: '/images/farhan.jpg',
-    linkedin: 'https://linkedin.com/in/farhan',
-    email: 'farhan@example.com',
+    photo: 'https://res.cloudinary.com/di5aefoge/image/upload/v1755177552/WhatsApp_Image_2025-08-14_at_18.46.05_xh3miy.jpg',
+    linkedin: 'https://www.linkedin.com/in/farhan-tamboli-458b10270',
+    email: 'farhantamboli22@gmail.com',
   },
   {
     name: 'Shubham Karoshi',
-    photo: '/images/shubham.jpg',
-    linkedin: 'https://linkedin.com/in/shubham',
-    email: 'shubham@example.com',
+    photo: 'https://res.cloudinary.com/di5aefoge/image/upload/v1755177715/WhatsApp_Image_2025-08-11_at_11.16.08_nqe0et.jpg',
+    linkedin: 'https://www.linkedin.com/in/shubham-karoshi-077813211/',
+    email: 'karoshishubham@gmail.com',
   },
   {
     name: 'Rushikesh Patil',
-    photo: '/images/rushi.jpg',
-    linkedin: 'https://linkedin.com/in/rushi',
-    email: 'rushi@example.com',
+    photo: 'https://res.cloudinary.com/di5aefoge/image/upload/v1755177552/WhatsApp_Image_2025-08-14_at_18.42.33_ct1lkn.jpg',
+    linkedin: 'https://www.linkedin.com/in/rushikesh-patil-7a72b11b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+    email: 'rushikeshpatil23052002@gmail.com',
   },
 ];
 
 function AboutUs() {
+  const [customerCount, setCustomerCount] = useState(0);
+  const [eventCount, setEventCount] = useState(0);
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const customers = await countCustomer();
+        const events = await countEvent();
+        setCustomerCount(
+          typeof customers === 'number' ? customers : customers?.count || 0
+        );
+        setEventCount(
+          typeof events === 'number' ? events : events?.count || 0
+        );
+
+      } catch (error) {
+        console.error('Failed to fetch counts', error);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
   return (
     <div className="bg-[#FCF7F8] text-[#365B73] px-6 py-10">
       <div className="max-w-6xl mx-auto space-y-16">
@@ -46,13 +72,13 @@ function AboutUs() {
           <div className="bg-white p-6 rounded-xl shadow-md text-center">
             <h3 className="text-xl font-medium mb-2">Happy Customers</h3>
             <p className="text-4xl font-bold text-[#A31621]">
-              <CountUp end={4500} duration={3} />
+              <CountUp end={customerCount} duration={3} />
             </p>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-md text-center">
             <h3 className="text-xl font-medium mb-2">Events Managed</h3>
             <p className="text-4xl font-bold text-[#A31621]">
-              <CountUp end={1200} duration={3} />
+              <CountUp end={eventCount} duration={3} />
             </p>
           </div>
         </section>

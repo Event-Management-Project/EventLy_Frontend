@@ -95,7 +95,7 @@ function AddEvent({ onEventCreated }) {
     formData.append("file", form.image);
 
     try {
-      const res = await createEvent(formData, organiser.id);
+      const res = await createEvent(formData, organiser.orgId);
       console.log(res);
       if (onEventCreated) {
         onEventCreated(res.data);
